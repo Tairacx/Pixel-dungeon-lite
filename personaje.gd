@@ -1,8 +1,12 @@
 extends CharacterBody3D
 
+enum Estado { QUIETO, CAMINAR, APUNTANDO }
+const RAPIDEZ = [0.0, 4.0, 2.0]   # rapidez de cada estado, en el orden del enum
+
 @export var camara: Camera3D
 @export var speed_caminar = 4.0
 @export var speed_correr = 4.0
+@export var speed_apuntando = 2.0
 @export_range(0.05, 2.0, 0.05) var tiempo_arranque = 0.1
 @onready var anim = $Modelo/AnimationPlayer
 
@@ -11,6 +15,8 @@ var multiplicador = 1.0
 var empuje = Vector3.ZERO
 var accion = ""
 var avance = Vector3.ZERO   # la parte de la velocidad que dan las teclas
+var estado = Estado.QUIETO
+var rapidez_estado = 0.0
 
 
 func _physics_process(delta):
@@ -22,8 +28,9 @@ func _physics_process(delta):
 	var giro_cam = camara.global_rotation.y
 	var direction = entrada.rotated(Vector3.UP, giro_cam).normalized()
 
+	var apuntando = Input.is_action_pressed("apuntar")
 	var corre = Input.is_action_pressed("correr")
-	var speed = speed_correr if corre else speed_caminar
+	var speed = speed_apuntando if apuntando else (speed_correr if corre else speed_caminar)
 	var objetivo = direction * speed * multiplicador
 	var paso = speed / tiempo_arranque * delta
 	avance = avance.move_toward(objetivo, paso)
@@ -33,17 +40,37 @@ func _physics_process(delta):
 	if direction.length() > 0:
 		basis = Basis.looking_at(direction)
 
+	move_and_slide()
+
+	var antes = estado
+	estado = elegir_estado()
+	rapidez_estado = RAPIDEZ[estado]
+	if estado != antes:
+		print("estado ", Estado.keys()[estado], " · rapidez ", "%.1f" % rapidez_estado, " m/s")
+	animar()
+	_prueba()
+
+
+func elegir_estado():
+	var rapidez = Vector2(velocity.x, velocity.z).length()
+	if rapidez < 0.1:
+		return Estado.QUIETO
+	if Input.is_action_pressed("apuntar"):
+		return Estado.APUNTANDO
+	return Estado.CAMINAR
+
+
+func animar():
 	if accion != "":
 		anim.play(accion)
-	elif avance.length() > speed_caminar + 0.1:
-		anim.play("sprint")
-	elif avance.length() > 0.1:
-		anim.play("walk")
-	else:
-		anim.play("idle")
-
-	move_and_slide()
-	_prueba()
+		return
+	match estado:
+		Estado.QUIETO:
+			anim.play("idle")
+		Estado.CAMINAR:
+			anim.play("walk")
+		Estado.APUNTANDO:
+			anim.play("holding-right-shoot")
 
 
 # ---------------------------------------------------------------------------
