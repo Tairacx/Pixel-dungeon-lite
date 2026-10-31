@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://camara_tercera.gd" id="3_camara"]
 [ext_resource type="Script" path="res://sistema_sol.gd" id="4_sistema"]
 [ext_resource type="Script" path="res://ciclo_dia.gd" id="5_ciclo"]
+[ext_resource type="Script" path="res://fotometro.gd" id="6_fotometro"]
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 1
@@ -146,3 +147,12 @@ mesh = SubResource("MallaEnemigo")
 [node name="Tirador" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -7)
 mesh = SubResource("MallaEnemigo")
+
+[node name="Fotometro" type="Node" parent="." node_paths=PackedStringArray("sistema", "camara", "superficie")]
+process_mode = 4
+script = ExtResource("6_fotometro")
+sistema = NodePath("../SistemaSol")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+superficie = NodePath("../Piso/MeshInstance3D")
+punto = Vector3(0, 0.01, 0)
+horas = Array[float]([10.0, 12.0, 14.0])

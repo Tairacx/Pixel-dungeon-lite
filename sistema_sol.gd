@@ -37,3 +37,16 @@ func aplicar_hora() -> void:
 	sol.light_energy = energia_sol * f
 	sol.light_color = CicloDia.color_sol(h)
 	entorno.environment.ambient_light_energy = lerpf(ambiente_noche, ambiente_dia, f)
+
+
+static func lambert(normal: Vector3, hacia_luz: Vector3) -> float:
+	# n · l con los dos vectores de largo 1; si la luz llega por detrás, 0.
+	return maxf(0.0, normal.normalized().dot(hacia_luz.normalized()))
+
+
+func prediccion_piso() -> float:
+	# La luz viaja hacia el -Z del Sol: "hacia la luz" es su +Z en el mundo.
+	# El color del Inspector está en sRGB y el render lo usa lineal; se pasa a
+	# lineal para compararlo con el píxel de la pantalla (también lineal).
+	var hacia_luz := sol.global_transform.basis.z
+	return sol.light_energy * sol.light_color.srgb_to_linear().r * lambert(Vector3.UP, hacia_luz)
