@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://personaje.gd" id="1_pj"]
 [ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
-[ext_resource type="Script" path="res://camara_sigue.gd" id="3_cam"]
+[ext_resource type="Script" path="res://camara_tercera.gd" id="3_cam"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -80,14 +80,20 @@ surface_material_override/0 = SubResource("CajaMat")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cajas/Caja3"]
 shape = SubResource("CajaForma")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo")]
-transform = Transform3D(1, 0, 0, 0, 0.819152, 0.573576, 0, -0.573576, 0.819152, 0, 5, 7)
+[node name="PivoteCamara" type="Node3D" parent="." node_paths=PackedStringArray("objetivo")]
 script = ExtResource("3_cam")
 objetivo = NodePath("../Personaje")
 
+[node name="SpringArm3D" type="SpringArm3D" parent="PivoteCamara"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.342020, 0, -0.342020, 0.939693, 0, 0, 0)
+spring_length = 4.5
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="PivoteCamara/SpringArm3D"]
+
 [node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara")]
 script = ExtResource("1_pj")
-camara = NodePath("../Camera3D")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
