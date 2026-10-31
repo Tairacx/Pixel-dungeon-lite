@@ -3,12 +3,14 @@ extends CharacterBody3D
 @export var camara: Camera3D
 @export var speed_caminar = 4.0
 @export var speed_correr = 4.0
+@export_range(0.05, 2.0, 0.05) var tiempo_arranque = 0.1
 @onready var anim = $Modelo/AnimationPlayer
 
 # Enchufes: otros scripts (la tarea B) los cambian desde afuera.
 var multiplicador = 1.0
 var empuje = Vector3.ZERO
 var accion = ""
+var avance = Vector3.ZERO   # la parte de la velocidad que dan las teclas
 
 
 func _physics_process(delta):
@@ -22,17 +24,20 @@ func _physics_process(delta):
 
 	var corre = Input.is_action_pressed("correr")
 	var speed = speed_correr if corre else speed_caminar
-	velocity.x = direction.x * speed * multiplicador + empuje.x
-	velocity.z = direction.z * speed * multiplicador + empuje.z
+	var objetivo = direction * speed * multiplicador
+	var paso = speed / tiempo_arranque * delta
+	avance = avance.move_toward(objetivo, paso)
+	velocity.x = avance.x + empuje.x
+	velocity.z = avance.z + empuje.z
 
 	if direction.length() > 0:
 		basis = Basis.looking_at(direction)
 
 	if accion != "":
 		anim.play(accion)
-	elif direction.length() > 0 and corre:
+	elif avance.length() > speed_caminar + 0.1:
 		anim.play("sprint")
-	elif direction.length() > 0:
+	elif avance.length() > 0.1:
 		anim.play("walk")
 	else:
 		anim.play("idle")
