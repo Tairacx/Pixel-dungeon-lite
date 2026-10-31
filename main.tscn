@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://camara_sigue.gd" id="3_cam"]
 [ext_resource type="Script" path="res://espada.gd" id="4_espada"]
 [ext_resource type="Script" path="res://apuntar.gd" id="5_apuntar"]
+[ext_resource type="Script" path="res://diana.gd" id="6_diana"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -54,6 +55,8 @@ shape = SubResource("PisoForma")
 
 [node name="Caja1" type="StaticBody3D" parent="Cajas"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.5, -4)
+script = ExtResource("6_diana")
+vida = 3
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cajas/Caja1"]
 mesh = SubResource("CajaMalla")

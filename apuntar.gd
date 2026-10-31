@@ -3,19 +3,28 @@ extends Node
 @export var tecla = "espada"
 @export var alcance = 1.25
 @export_enum("Personaje", "Centro de la cámara", "Mouse") var desde = 0
+@export var danio = 1
+@export var cadencia = 0.4
 
 @onready var pj = get_parent()
 var origen = Vector3.ZERO   # de dónde sale el rayo
+var espera = 0.0
 
 
-func _physics_process(_delta):
-	if Input.is_action_just_pressed(tecla):
+func _physics_process(delta):
+	espera -= delta
+	if Input.is_action_pressed(tecla) and espera <= 0.001:
+		espera = cadencia
 		var golpe = lanzar_rayo()
 		if golpe.is_empty():
 			print("no le dio a nada en ", alcance, " m")
-		else:
-			var d = snappedf(origen.distance_to(golpe.position), 0.01)
-			print("le dio a ", golpe.collider.name, " a ", d, " m")
+			return
+
+		var d = snappedf(origen.distance_to(golpe.position), 0.01)
+		print("le dio a ", golpe.collider.name, " a ", d, " m")
+
+		if golpe.collider.has_method("recibir_golpe"):
+			golpe.collider.recibir_golpe(danio)
 
 
 func lanzar_rayo():
