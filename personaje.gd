@@ -1,11 +1,11 @@
 extends CharacterBody3D
 
-enum Estado { QUIETO, CAMINAR, APUNTANDO }
-const RAPIDEZ = [0.0, 4.0, 2.0]   # rapidez de cada estado, en el orden del enum
+enum Estado { QUIETO, CAMINAR, CORRER, APUNTANDO }
+const RAPIDEZ = [0.0, 4.0, 6.0, 2.0]   # rapidez de cada estado, en el orden del enum
 
 @export var camara: Camera3D
 @export var speed_caminar = 4.0
-@export var speed_correr = 4.0
+@export var speed_correr = 6.0
 @export var speed_apuntando = 2.0
 @export_range(0.05, 2.0, 0.05) var tiempo_arranque = 0.1
 @onready var anim = $Modelo/AnimationPlayer
@@ -57,6 +57,8 @@ func elegir_estado():
 		return Estado.QUIETO
 	if Input.is_action_pressed("apuntar"):
 		return Estado.APUNTANDO
+	if rapidez > speed_caminar + 0.1:
+		return Estado.CORRER
 	return Estado.CAMINAR
 
 
@@ -69,6 +71,8 @@ func animar():
 			anim.play("idle")
 		Estado.CAMINAR:
 			anim.play("walk")
+		Estado.CORRER:
+			anim.play("sprint")
 		Estado.APUNTANDO:
 			anim.play("holding-right-shoot")
 
