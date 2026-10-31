@@ -2,6 +2,7 @@ extends Camera3D
 
 @export var objetivo: Node3D
 @export var distancia = Vector3(0, 12, 5)
+@export var suavizado = 6.0
 
 
 func _ready():
@@ -11,8 +12,9 @@ func _ready():
 		objetivo.global_position)
 
 
-func _physics_process(_delta):
-	global_position = objetivo.global_position + distancia
+func _physics_process(delta):
+	var destino = objetivo.global_position + distancia
+	global_position = global_position.lerp(destino, suavizado * delta)
 
 	if _en_prueba() and Engine.get_physics_frames() % 30 == 0:
 		print("cámara ", global_position.snappedf(0.01))
