@@ -1,7 +1,8 @@
 extends CharacterBody3D
 
 @export var camara: Camera3D
-@export var speed = 3.0
+@export var speed_caminar = 4.0
+@export var speed_correr = 4.0
 @onready var anim = $Modelo/AnimationPlayer
 
 # Enchufes: otros scripts (la tarea B) los cambian desde afuera.
@@ -15,11 +16,12 @@ func _physics_process(delta):
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	var entrada = Vector3(input_dir.x, 0.0, input_dir.y)
-	# Estado previo al nivel 1: la inclinación de la cámara deforma la diagonal.
-	var direction = camara.global_basis * entrada
-	direction.y = 0.0
-	direction = direction.normalized()
+	# Solo el giro horizontal de la cámara: así la inclinación no deforma la diagonal.
+	var giro_cam = camara.global_rotation.y
+	var direction = entrada.rotated(Vector3.UP, giro_cam).normalized()
 
+	var corre = Input.is_action_pressed("correr")
+	var speed = speed_correr if corre else speed_caminar
 	velocity.x = direction.x * speed * multiplicador + empuje.x
 	velocity.z = direction.z * speed * multiplicador + empuje.z
 
@@ -28,6 +30,8 @@ func _physics_process(delta):
 
 	if accion != "":
 		anim.play(accion)
+	elif direction.length() > 0 and corre:
+		anim.play("sprint")
 	elif direction.length() > 0:
 		anim.play("walk")
 	else:
