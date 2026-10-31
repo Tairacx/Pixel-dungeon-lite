@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
 [ext_resource type="Script" path="res://camara_sigue.gd" id="3_cam"]
 [ext_resource type="Script" path="res://espada.gd" id="4_espada"]
+[ext_resource type="Script" path="res://apuntar.gd" id="5_apuntar"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -99,3 +100,6 @@ transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
 
 [node name="Espada" type="Node" parent="Personaje"]
 script = ExtResource("4_espada")
+
+[node name="Apuntar" type="Node" parent="Personaje"]
+script = ExtResource("5_apuntar")
