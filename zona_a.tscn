@@ -1,0 +1,148 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://personaje.gd" id="1_personaje"]
+[ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
+[ext_resource type="Script" path="res://camara_tercera.gd" id="3_camara"]
+[ext_resource type="Script" path="res://sistema_sol.gd" id="4_sistema"]
+[ext_resource type="Script" path="res://ciclo_dia.gd" id="5_ciclo"]
+
+[sub_resource type="Environment" id="Entorno"]
+background_mode = 1
+background_color = Color(0.105882, 0.0862745, 0.14902, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.105882, 0.0862745, 0.14902, 1)
+ambient_light_energy = 0.2
+tonemap_mode = 2
+
+[sub_resource type="StandardMaterial3D" id="MatPiedra"]
+albedo_color = Color(0.247059, 0.207843, 0.321569, 1)
+
+[sub_resource type="StandardMaterial3D" id="MatPeligro"]
+albedo_color = Color(0.839216, 0.227451, 0.227451, 1)
+
+[sub_resource type="BoxMesh" id="MallaPiso"]
+material = SubResource("MatPiedra")
+size = Vector3(24, 0.2, 18)
+
+[sub_resource type="BoxShape3D" id="FormaPiso"]
+size = Vector3(24, 0.2, 18)
+
+[sub_resource type="BoxMesh" id="MallaParedLarga"]
+material = SubResource("MatPiedra")
+size = Vector3(24, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="FormaParedLarga"]
+size = Vector3(24, 2, 0.5)
+
+[sub_resource type="BoxMesh" id="MallaParedCorta"]
+material = SubResource("MatPiedra")
+size = Vector3(0.5, 2, 18)
+
+[sub_resource type="BoxShape3D" id="FormaParedCorta"]
+size = Vector3(0.5, 2, 18)
+
+[sub_resource type="BoxMesh" id="MallaEnemigo"]
+material = SubResource("MatPeligro")
+size = Vector3(0.8, 0.8, 0.8)
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.35
+height = 1.75
+
+[node name="ZonaA" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Entorno")
+
+[node name="Sol" type="DirectionalLight3D" parent="."]
+shadow_enabled = true
+
+[node name="SistemaSol" type="Node" parent="." node_paths=PackedStringArray("sol", "entorno")]
+script = ExtResource("4_sistema")
+sol = NodePath("../Sol")
+entorno = NodePath("../WorldEnvironment")
+
+[node name="CicloDia" type="Node" parent="SistemaSol"]
+script = ExtResource("5_ciclo")
+
+[node name="Piso" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Piso"]
+mesh = SubResource("MallaPiso")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Piso"]
+shape = SubResource("FormaPiso")
+
+[node name="Paredes" type="Node3D" parent="."]
+
+[node name="Norte" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -9)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Norte"]
+mesh = SubResource("MallaParedLarga")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Norte"]
+shape = SubResource("FormaParedLarga")
+
+[node name="Sur" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 9)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Sur"]
+mesh = SubResource("MallaParedLarga")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Sur"]
+shape = SubResource("FormaParedLarga")
+
+[node name="Oeste" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Oeste"]
+mesh = SubResource("MallaParedCorta")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Oeste"]
+shape = SubResource("FormaParedCorta")
+
+[node name="Este" type="StaticBody3D" parent="Paredes"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Este"]
+mesh = SubResource("MallaParedCorta")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Este"]
+shape = SubResource("FormaParedCorta")
+
+[node name="PivoteCamara" type="Node3D" parent="." node_paths=PackedStringArray("objetivo")]
+script = ExtResource("3_camara")
+objetivo = NodePath("../Personaje")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="PivoteCamara"]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.342020, 0, -0.342020, 0.939693, 0, 0, 0)
+spring_length = 4.5
+margin = 0.2
+
+[node name="Camera3D" type="Camera3D" parent="PivoteCamara/SpringArm3D"]
+
+[node name="Personaje" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camara")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
+script = ExtResource("1_personaje")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="Personaje" instance=ExtResource("2_modelo")]
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+
+[node name="Enemigo1" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.4, -4)
+mesh = SubResource("MallaEnemigo")
+
+[node name="Enemigo2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.4, -4)
+mesh = SubResource("MallaEnemigo")
+
+[node name="Tirador" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, -7)
+mesh = SubResource("MallaEnemigo")
