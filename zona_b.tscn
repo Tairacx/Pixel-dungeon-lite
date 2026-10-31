@@ -1,0 +1,240 @@
+[gd_scene format=3 uid="uid://cpeemtaitflnl"]
+
+[ext_resource type="Script" path="res://personaje.gd" id="1_pj"]
+[ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="2_modelo"]
+[ext_resource type="Script" path="res://luz_parpadeante.gd" id="3_luz"]
+[ext_resource type="Script" path="res://disparador.gd" id="4_disp"]
+[ext_resource type="Script" path="res://sistema_eventos.gd" id="5_sis"]
+[ext_resource type="Script" path="res://camara_tercera.gd" id="6_cam"]
+
+[sub_resource type="Environment" id="Entorno"]
+background_mode = 1
+background_color = Color(0.106, 0.086, 0.149, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.75, 0.7, 0.9, 1)
+tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="PisoMalla"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="StandardMaterial3D" id="Piedra"]
+albedo_color = Color(0.247, 0.208, 0.322, 1)
+roughness = 0.9
+
+[sub_resource type="BoxShape3D" id="PisoForma"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="ParedNSMalla"]
+size = Vector3(13, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="ParedNSForma"]
+size = Vector3(13, 2, 0.5)
+
+[sub_resource type="BoxMesh" id="ParedEOMalla"]
+size = Vector3(0.5, 2, 12)
+
+[sub_resource type="BoxShape3D" id="ParedEOForma"]
+size = Vector3(0.5, 2, 12)
+
+[sub_resource type="BoxMesh" id="PuertaMalla"]
+size = Vector3(2.2, 2.5, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="PiedraClara"]
+albedo_color = Color(0.33, 0.28, 0.42, 1)
+roughness = 0.9
+
+[sub_resource type="BoxShape3D" id="PuertaForma"]
+size = Vector3(2.2, 2.5, 0.3)
+
+[sub_resource type="SphereMesh" id="LlamaMalla"]
+radius = 0.12
+height = 0.24
+
+[sub_resource type="StandardMaterial3D" id="Llama"]
+albedo_color = Color(0.949, 0.639, 0.227, 1)
+emission_enabled = true
+emission = Color(0.949, 0.639, 0.227, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="BoxShape3D" id="DisparadorForma"]
+size = Vector3(2.5, 2, 1.5)
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.35
+height = 1.75
+
+[node name="ZonaB" type="Node3D" unique_id=623392918]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1105737243]
+environment = SubResource("Entorno")
+
+[node name="Piso" type="StaticBody3D" parent="." unique_id=1579752341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Piso" unique_id=721955597]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = SubResource("Piedra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Piso" unique_id=1336439694]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="." unique_id=478123107]
+
+[node name="Norte" type="StaticBody3D" parent="Paredes" unique_id=1487654516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Norte" unique_id=1161735161]
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("Piedra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Norte" unique_id=1917284093]
+shape = SubResource("ParedNSForma")
+
+[node name="Sur" type="StaticBody3D" parent="Paredes" unique_id=492660760]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Sur" unique_id=1476766011]
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("Piedra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Sur" unique_id=1764161116]
+shape = SubResource("ParedNSForma")
+
+[node name="Este" type="StaticBody3D" parent="Paredes" unique_id=1514678504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Este" unique_id=1396363055]
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("Piedra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Este" unique_id=145358277]
+shape = SubResource("ParedEOForma")
+
+[node name="Oeste" type="StaticBody3D" parent="Paredes" unique_id=1117114065]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Paredes/Oeste" unique_id=560914932]
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("Piedra")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Paredes/Oeste" unique_id=630379237]
+shape = SubResource("ParedEOForma")
+
+[node name="Puerta" type="StaticBody3D" parent="." unique_id=506687182]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, -5.85)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Puerta" unique_id=407913284]
+mesh = SubResource("PuertaMalla")
+surface_material_override/0 = SubResource("PiedraClara")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Puerta" unique_id=1911889146]
+shape = SubResource("PuertaForma")
+
+[node name="Antorchas" type="Node3D" parent="." unique_id=1209549606]
+
+[node name="AntorchaNE" type="OmniLight3D" parent="Antorchas" unique_id=1344388742]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, -5)
+light_color = Color(0.949, 0.639, 0.227, 1)
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.0
+script = ExtResource("3_luz")
+amplitud = 0.35
+
+[node name="Llama" type="MeshInstance3D" parent="Antorchas/AntorchaNE" unique_id=1723588145]
+mesh = SubResource("LlamaMalla")
+surface_material_override/0 = SubResource("Llama")
+
+[node name="AntorchaNO" type="OmniLight3D" parent="Antorchas" unique_id=297055860]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2, -5)
+light_color = Color(0.949, 0.639, 0.227, 1)
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.0
+script = ExtResource("3_luz")
+amplitud = 0.35
+semilla = 19
+
+[node name="Llama" type="MeshInstance3D" parent="Antorchas/AntorchaNO" unique_id=138851160]
+mesh = SubResource("LlamaMalla")
+surface_material_override/0 = SubResource("Llama")
+
+[node name="AntorchaSE" type="OmniLight3D" parent="Antorchas" unique_id=703395076]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 5)
+light_color = Color(0.949, 0.639, 0.227, 1)
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.0
+script = ExtResource("3_luz")
+amplitud = 0.35
+semilla = 31
+
+[node name="Llama" type="MeshInstance3D" parent="Antorchas/AntorchaSE" unique_id=461928617]
+mesh = SubResource("LlamaMalla")
+surface_material_override/0 = SubResource("Llama")
+
+[node name="AntorchaSO" type="OmniLight3D" parent="Antorchas" unique_id=487328865]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2, 5)
+light_color = Color(0.949, 0.639, 0.227, 1)
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.0
+script = ExtResource("3_luz")
+amplitud = 0.35
+semilla = 53
+
+[node name="Llama" type="MeshInstance3D" parent="Antorchas/AntorchaSO" unique_id=1780140162]
+mesh = SubResource("LlamaMalla")
+surface_material_override/0 = SubResource("Llama")
+
+[node name="Disparador" type="Area3D" parent="." unique_id=1650542225]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -4.9)
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_disp")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Disparador" unique_id=1466151732]
+shape = SubResource("DisparadorForma")
+
+[node name="LuzEvento" type="OmniLight3D" parent="." unique_id=1324433059]
+light_energy = 0.0
+omni_range = 4.0
+omni_attenuation = 2.0
+
+[node name="LuzCorazones" type="OmniLight3D" parent="." unique_id=1094481990]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+light_color = Color(0.949, 0.639, 0.227, 1)
+omni_range = 12.0
+omni_attenuation = 2.0
+
+[node name="SistemaEventos" type="Node" parent="." unique_id=2007426626 node_paths=PackedStringArray("luz_evento", "luz_variable")]
+script = ExtResource("5_sis")
+luz_evento = NodePath("../LuzEvento")
+luz_variable = NodePath("../LuzCorazones")
+color_bajo = Color(0.949, 0.639, 0.227, 1)
+color_alto = Color(0.839, 0.227, 0.227, 1)
+
+[node name="PivoteCamara" type="Node3D" parent="." unique_id=13121365 node_paths=PackedStringArray("objetivo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
+script = ExtResource("6_cam")
+objetivo = NodePath("../Personaje")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="PivoteCamara" unique_id=1482291426]
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 0, 0)
+spring_length = 8.0
+margin = 0.3
+
+[node name="Camera3D" type="Camera3D" parent="PivoteCamara/SpringArm3D" unique_id=1992479227]
+
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=784320045 node_paths=PackedStringArray("camara")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.5)
+collision_layer = 8
+script = ExtResource("1_pj")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=27449484]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="Personaje" unique_id=1659738270 instance=ExtResource("2_modelo")]
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
