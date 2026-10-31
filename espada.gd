@@ -16,7 +16,7 @@ func _physics_process(delta):
 	tiempo -= delta
 	match estado:
 		Estado.LISTA:
-			if Input.is_action_just_pressed(tecla):
+			if Input.is_action_just_pressed(tecla) and puede():
 				empezar()
 		Estado.ACTIVA:
 			if tiempo <= 0.001:   # 0.001 y no 0: restar 1/60 no da exacto
@@ -26,13 +26,24 @@ func _physics_process(delta):
 				estado = Estado.LISTA
 
 
+func puede():
+	print("golpe de 1 a 1.25 m")
+	return pj.is_on_floor()
+
+
 func empezar():
 	estado = Estado.ACTIVA
 	tiempo = duracion
+	pj.empuje = Vector3.ZERO
+	pj.multiplicador = 0
+	pj.accion = "attack-melee-right"
 	print("empieza: ", tecla)
 
 
 func terminar():
 	estado = Estado.RECARGA
 	tiempo = recarga
+	pj.empuje = Vector3.ZERO
+	pj.multiplicador = 1.0
+	pj.accion = ""
 	print("termina: ", tecla)
