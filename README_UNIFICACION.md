@@ -33,6 +33,27 @@ Se eliminaron los nodos `Cuerpo` y `Corona` y los subrecursos que solo ellos usa
 `main.tscn` sigue teniendo su propia instancia del perseguidor para las prácticas de la Tarea 7;
 no se modificó su comportamiento.
 
+## Comparación con la copia anterior
+
+Se comparó esta versión con `C:\Users\User\OneDrive\Documentos\Pixel-dungeon`, que es una copia de
+la rama `tarea-c-bryan` (sala original, con el Rey Esqueleto quieto y los archivos del perseguidor
+copiados sueltos, sin usar en la escena).
+
+- La sala es la misma: piso, cuatro paredes, cuatro pilares, `LuzPrincipal`, la antorcha
+  `LuzJugador`, la cámara en tercera persona y el `Personaje` conservan sus transformaciones.
+- Los scripts `camara_tercera.gd`, `personaje.gd`, `perseguidor.gd` y `perseguidor.tscn` son
+  idénticos. `luz_jugador.gd` tiene el mismo texto; solo cambian los finales de línea (CRLF/LF).
+- Lo único distinto en la escena es el jefe: allí sigue `ReyEsqueleto` (cápsula + corona) y aquí
+  está `JefePerseguidor` con la instancia del perseguidor y la misma luz roja.
+- El `zona_c.tscn` de esa carpeta fue reguardado por Godot 4.7.2: tiene 3023 líneas frente a 3135
+  y pesa unos 100 KB menos porque se eliminó una malla incrustada que no se usaba. En ejecución
+  se comporta igual.
+
+Para la evidencia se usó la misma cámara fija en las dos escenas, en `(7, 6, 9.5)` mirando a
+`(0, 0.8, -3)`, y se congeló al perseguidor en su punto de partida. El resultado está en
+`capturas/10_comparacion_sala_jefe.png`: solo cambia el 1.4 % de los píxeles, todos alrededor del
+jefe (entre x = 424–712 e y = 288–556 de la imagen de 1280 × 720).
+
 ## Detalles técnicos
 
 - La escala va en el nodo envoltorio (`JefePerseguidor`), no en el perseguidor: el script hace
