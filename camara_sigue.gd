@@ -22,10 +22,3 @@ func _physics_process(delta):
 	var destino = foco + distancia
 	global_position = global_position.lerp(destino, suavizado * delta)
 
-	if _en_prueba() and Engine.get_physics_frames() % 30 == 0:
-		print("cámara ", global_position.snappedf(0.01))
-
-
-func _en_prueba() -> bool:
-	var p = objetivo.get("prueba")
-	return p != null and p != 0
