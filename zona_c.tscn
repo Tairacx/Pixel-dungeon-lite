@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://personaje/character-male-a.glb" id="3_4bgqf"]
 [ext_resource type="Texture2D" path="res://personaje/Textures/colormap.png" id="4_8nv3w"]
 [ext_resource type="Script" path="res://luz_jugador.gd" id="5_ef3c1"]
+[ext_resource type="PackedScene" path="res://perseguidor.tscn" id="6_jefe"]
 
 [sub_resource type="Environment" id="Environment_85d48"]
 background_mode = 1
@@ -76,27 +77,11 @@ size = Vector3(1, 3.5, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_panh6"]
 size = Vector3(1, 3.5, 1)
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ksmuy"]
-albedo_color = Color(0.8392157, 0.22745098, 0.22745098, 1)
-roughness = 0.7
-emission_enabled = true
-emission = Color(0.8392157, 0.22745098, 0.22745098, 1)
-emission_energy_multiplier = 0.25
-
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_iqfy8"]
-radius = 0.65
-height = 2.4
-
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_88mhn"]
 albedo_color = Color(0.9490196, 0.6392157, 0.22745098, 1)
 emission_enabled = true
 emission = Color(0.9490196, 0.6392157, 0.22745098, 1)
 emission_energy_multiplier = 2.0
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_270n3"]
-top_radius = 0.45
-bottom_radius = 0.55
-height = 0.3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_suivj"]
 transparency = 1
@@ -2997,21 +2982,15 @@ mesh = SubResource("BoxMesh_fguuj")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Pilares/PilarSO" unique_id=183071280]
 shape = SubResource("BoxShape3D_panh6")
 
-[node name="ReyEsqueleto" type="Node3D" parent="." unique_id=1509863196]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5.2)
+[node name="JefePerseguidor" type="Node3D" parent="." unique_id=1509863196]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, -5.2)
 
-[node name="Cuerpo" type="MeshInstance3D" parent="ReyEsqueleto" unique_id=402347802]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
-material_override = SubResource("StandardMaterial3D_ksmuy")
-mesh = SubResource("CapsuleMesh_iqfy8")
+[node name="Perseguidor" parent="JefePerseguidor" node_paths=PackedStringArray("objetivo") instance=ExtResource("6_jefe")]
+objetivo = NodePath("../../Personaje")
+puntos = Array[Vector3]([Vector3(-4.5, 0, -3.0), Vector3(4.5, 0, -3.0)])
 
-[node name="Corona" type="MeshInstance3D" parent="ReyEsqueleto" unique_id=1475841796]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.55, 0)
-material_override = SubResource("StandardMaterial3D_88mhn")
-mesh = SubResource("CylinderMesh_270n3")
-
-[node name="LuzReyEsqueleto" type="OmniLight3D" parent="ReyEsqueleto" unique_id=61002207]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
+[node name="LuzReyEsqueleto" type="OmniLight3D" parent="JefePerseguidor" unique_id=61002207]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
 light_color = Color(0.8392157, 0.22745098, 0.22745098, 1)
 light_energy = 2.0
 shadow_enabled = true
