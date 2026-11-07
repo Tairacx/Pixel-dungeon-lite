@@ -32,6 +32,8 @@ func _physics_process(delta):
 	var corre = Input.is_action_pressed("correr")
 	var speed = speed_apuntando if apuntando else (speed_correr if corre else speed_caminar)
 	var objetivo = direction * speed * multiplicador
+	if multiplicador <= 0.0:
+		avance = Vector3.ZERO   # sin teclas no hay inercia: el empuje da la rapidez exacta
 	var paso = speed / tiempo_arranque * delta
 	avance = avance.move_toward(objetivo, paso)
 	velocity.x = avance.x + empuje.x
