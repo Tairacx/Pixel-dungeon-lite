@@ -128,6 +128,7 @@ margin = 0.2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0, 0)
 script = ExtResource("1_personaje")
 camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+collision_layer = 8
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
