@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://espada.gd" id="4_espada"]
 [ext_resource type="Script" path="res://apuntar.gd" id="5_apuntar"]
 [ext_resource type="Script" path="res://diana.gd" id="6_diana"]
+[ext_resource type="PackedScene" path="res://perseguidor.tscn" id="4_perseguidor"]
 
 [sub_resource type="ProceduralSkyMaterial" id="CieloMat"]
 
@@ -113,3 +114,7 @@ script = ExtResource("4_espada")
 
 [node name="Apuntar" type="Node" parent="Personaje"]
 script = ExtResource("5_apuntar")
+
+[node name="Perseguidor" parent="." node_paths=PackedStringArray("objetivo") instance=ExtResource("4_perseguidor")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 0, 6)
+objetivo = NodePath("../Personaje")
