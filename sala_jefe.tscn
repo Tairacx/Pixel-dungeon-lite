@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://dkagsaxuv285v" path="res://antorcha.tscn" id="3_antorcha"]
 [ext_resource type="Script" uid="uid://bjcmrncgn6t68" path="res://dano_contacto.gd" id="4_garra"]
 [ext_resource type="Script" uid="uid://btqi76njchcfb" path="res://jefe.gd" id="5_jefe_gd"]
-[ext_resource type="Script" path="res://corona.gd" id="6_corona"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_srkvk"]
 size = Vector3(16, 0.2, 16)
@@ -286,9 +285,6 @@ script = ExtResource("4_garra")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="JefePerseguidor/Perseguidor/Garra" unique_id=722591254]
 shape = SubResource("SphereShape3D_garra")
-
-[node name="Corona" type="Node" parent="JefePerseguidor/Perseguidor"]
-script = ExtResource("6_corona")
 
 [node name="LuzReyEsqueleto" type="OmniLight3D" parent="JefePerseguidor" unique_id=385990742]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, 0)
