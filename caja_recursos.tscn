@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://daiidpetxikjp"]
+
+[ext_resource type="Script" uid="uid://d200g8tljvdnv" path="res://caja_recursos.gd" id="1_caja"]
+
+[sub_resource type="BoxShape3D" id="CajaForma"]
+size = Vector3(0.85, 0.9, 0.85)
+
+[sub_resource type="StandardMaterial3D" id="CajaVistaMat"]
+albedo_color = Color(0.545, 0.353, 0.169, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="CajaVistaMalla"]
+size = Vector3(0.85, 0.9, 0.85)
+
+[node name="CajaRecursos" type="StaticBody3D" unique_id=1009967771]
+collision_mask = 0
+script = ExtResource("1_caja")
+color_cuerpo = Color(0.545, 0.353, 0.169, 1)
+color_detalle = Color(0.788, 0.635, 0.153, 1)
+
+[node name="Forma" type="CollisionShape3D" parent="." unique_id=751407817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+shape = SubResource("CajaForma")
+
+[node name="VistaEditor" type="MeshInstance3D" parent="." unique_id=465014729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+material_override = SubResource("CajaVistaMat")
+mesh = SubResource("CajaVistaMalla")

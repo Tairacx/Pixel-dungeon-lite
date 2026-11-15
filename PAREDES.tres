@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://cw8e1uad5qavb"]
+
+[ext_resource type="Texture2D" uid="uid://c8ephdpwsi6e3" path="res://muro_ladrillo.png" id="1_6tups"]
+
+[resource]
+albedo_texture = ExtResource("1_6tups")
+roughness = 0.9
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 0

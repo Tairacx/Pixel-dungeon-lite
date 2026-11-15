@@ -19,13 +19,16 @@ extends Node
 @export var depurar := false       # true = imprime las energías (para las capturas)
 
 var variable := 0.0                # de 0 a 1: 0 = tranquilo, 1 = peligro
-var corazones := 5
+var corazones := 5.0
 
 
 func _ready() -> void:
-	corazones = corazones_max
-	for d in get_tree().get_nodes_in_group("disparadores"):
-		d.evento.connect(_on_evento)       # la función que escucha, sin paréntesis
+	corazones = float(corazones_max)
+	# Los disparadores y los contenedores rompibles avisan con la misma señal.
+	for grupo in ["disparadores", "rompibles"]:
+		for d in get_tree().get_nodes_in_group(grupo):
+			if d.has_signal("evento"):
+				d.evento.connect(_on_evento)       # la función que escucha, sin paréntesis
 	luz_evento.light_energy = 0.0
 	_actualizar_variable()
 
@@ -56,8 +59,8 @@ func _on_evento(posicion: Vector3) -> void:
 # ---- Variable del juego: los corazones ----
 # Si la mecánica real existe, ella llama set_corazones(...). Mientras no:
 # J quita un corazón (más peligro) y K cura uno (las flechas mueven al héroe).
-func set_corazones(c: int) -> void:
-	corazones = clampi(c, 0, corazones_max)
+func set_corazones(c: float) -> void:
+	corazones = clampf(c, 0.0, float(corazones_max))
 	_actualizar_variable()
 
 

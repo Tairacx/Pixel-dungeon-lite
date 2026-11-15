@@ -19,6 +19,10 @@ var estado = Estado.QUIETO
 var rapidez_estado = 0.0
 
 
+func _ready():
+	add_to_group("jugador")   # los recolectables y la salud buscan al héroe por este grupo
+
+
 func _physics_process(delta):
 	velocity += get_gravity() * delta
 

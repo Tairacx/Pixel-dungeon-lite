@@ -12,11 +12,21 @@ enum Estado { PATRULLA, PERSEGUIR }
 	Vector3(-8, 0, 6), Vector3(8, 0, 6)]
 @onready var anim = $Modelo/AnimationPlayer
 
+# Aturdimiento: al recibir un golpe el enemigo se detiene unos instantes.
+@export var aturdimiento := 0.4   # segundos que queda quieto
+
 var estado = Estado.PATRULLA
 var punto = 0
+var aturdido := 0.0               # temporizador del aturdimiento (0 = no aturdido)
 
 
 func _physics_process(delta):
+	if aturdido > 0.0:
+		aturdido -= delta
+		velocity.x = 0.0
+		velocity.z = 0.0
+		move_and_slide()
+		return
 	velocity += get_gravity() * delta
 	var distancia = global_position.distance_to(objetivo.global_position)
 
@@ -47,3 +57,7 @@ func ir_a(p):
 	velocity.z = dir.z * rapidez
 	basis = Basis.looking_at(dir)
 	anim.play("walk")
+
+
+func aturdir(segundos: float) -> void:
+	aturdido = maxf(aturdido, segundos)

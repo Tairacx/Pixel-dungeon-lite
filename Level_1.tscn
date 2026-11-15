@@ -1,0 +1,1179 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dk6qt0426pkck" path="res://WhatsApp Image 2026-11-13 at 8.22.21 PM.jpeg" id="1_6eo5x"]
+[ext_resource type="Material" uid="uid://dddsw3hdrnuv3" path="res://PISO.tres" id="1_ar1si"]
+[ext_resource type="Texture2D" uid="uid://c8ephdpwsi6e3" path="res://muro_ladrillo.png" id="2_4s4xf"]
+[ext_resource type="PackedScene" uid="uid://dkagsaxuv285v" path="res://antorcha.tscn" id="3_p7bnq"]
+[ext_resource type="Script" uid="uid://cg0mq7yg42bhc" path="res://disparador.gd" id="4_ar1si"]
+[ext_resource type="Script" uid="uid://cr76bsctimqjl" path="res://sistema_eventos.gd" id="5_6fba8"]
+[ext_resource type="Script" uid="uid://vare7cgkhumr" path="res://camara_zona_b.gd" id="6_yaehp"]
+[ext_resource type="Script" uid="uid://cchv43eug6720" path="res://personaje.gd" id="7_d1osm"]
+[ext_resource type="PackedScene" uid="uid://bkmexfnojlmxi" path="res://personaje/character-male-a.glb" id="8_ie7uf"]
+[ext_resource type="Script" uid="uid://cil33ksiydo1g" path="res://caja_falsa.gd" id="9_3fa85"]
+[ext_resource type="Script" uid="uid://bv8e8vebwxj17" path="res://espada.gd" id="9_gwx4l"]
+[ext_resource type="Script" uid="uid://c6djxnqeh2j82" path="res://apuntar.gd" id="10_fkbji"]
+[ext_resource type="PackedScene" uid="uid://8j4a0xt0tjg7" path="res://sala_jefe.tscn" id="11_jefe"]
+[ext_resource type="Script" uid="uid://d2ydy2y13fgr6" path="res://salud.gd" id="12_salud"]
+[ext_resource type="Script" uid="uid://cwi7ed75uep" path="res://hud.gd" id="13_hud"]
+[ext_resource type="Script" uid="uid://bjrflnjjmk0xx" path="res://arma.gd" id="14_arma"]
+[ext_resource type="PackedScene" path="res://esqueleto_pequeno.tscn" id="15_esq"]
+[ext_resource type="PackedScene" uid="uid://daiidpetxikjp" path="res://caja_recursos.tscn" id="16_caja"]
+[ext_resource type="PackedScene" path="res://barril.tscn" id="17_barril"]
+[ext_resource type="PackedScene" path="res://recolectable_corazon.tscn" id="18_corazon"]
+[ext_resource type="PackedScene" path="res://recolectable_arma.tscn" id="19_arma"]
+[ext_resource type="PackedScene" path="res://cofre.tscn" id="20_cofre"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ie7uf"]
+panorama = ExtResource("1_6eo5x")
+
+[sub_resource type="Sky" id="Sky_d1osm"]
+sky_material = SubResource("PanoramaSkyMaterial_ie7uf")
+
+[sub_resource type="Environment" id="Entorno"]
+background_mode = 2
+background_color = Color(0.106, 0.086, 0.149, 1)
+sky = SubResource("Sky_d1osm")
+ambient_light_source = 1
+ambient_light_color = Color(0.31867287, 0.25274974, 0.5962264, 1)
+tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="PisoMalla"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="BoxShape3D" id="PisoForma"]
+size = Vector3(12, 0.2, 12)
+
+[sub_resource type="BoxMesh" id="ParedNSSegMalla"]
+size = Vector3(5, 3.4506836, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="MuroMat"]
+albedo_texture = ExtResource("2_4s4xf")
+roughness = 0.9
+uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+uv1_world_triplanar = true
+texture_filter = 0
+
+[sub_resource type="BoxShape3D" id="ParedNSSegForma"]
+size = Vector3(5, 2, 0.5)
+
+[sub_resource type="BoxMesh" id="ParedEOSegMalla"]
+size = Vector3(0.5, 3.489685, 4.5)
+
+[sub_resource type="BoxShape3D" id="ParedEOSegForma"]
+size = Vector3(0.5, 2, 4.5)
+
+[sub_resource type="BoxMesh" id="ParedNSMalla"]
+size = Vector3(13, 3.48938, 0.5)
+
+[sub_resource type="BoxShape3D" id="ParedNSForma"]
+size = Vector3(13, 2, 0.5)
+
+[sub_resource type="BoxMesh" id="ParedEOMalla"]
+size = Vector3(0.5, 3.4339294, 12)
+
+[sub_resource type="BoxShape3D" id="ParedEOForma"]
+size = Vector3(0.5, 2, 12)
+
+[sub_resource type="BoxMesh" id="PasilloPisoNSMalla"]
+size = Vector3(3, 0.2, 8.2)
+
+[sub_resource type="BoxShape3D" id="PasilloPisoNSForma"]
+size = Vector3(3, 0.2, 8.2)
+
+[sub_resource type="BoxMesh" id="PasilloParedNSMalla"]
+size = Vector3(0.5, 3.4375, 7)
+
+[sub_resource type="BoxShape3D" id="PasilloParedNSForma"]
+size = Vector3(0.5, 2, 7)
+
+[sub_resource type="BoxMesh" id="PasilloPisoEOMalla"]
+size = Vector3(8.2, 0.2, 3)
+
+[sub_resource type="BoxShape3D" id="PasilloPisoEOForma"]
+size = Vector3(8.2, 0.2, 3)
+
+[sub_resource type="BoxMesh" id="PasilloParedEOMalla"]
+size = Vector3(7, 3.5004883, 0.5)
+
+[sub_resource type="BoxShape3D" id="PasilloParedEOForma"]
+size = Vector3(7, 2, 0.5)
+
+[sub_resource type="BoxShape3D" id="DisparadorForma"]
+size = Vector3(2.5, 2, 1.5)
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.35
+height = 1.75
+
+[node name="ZonaB" type="Node3D" unique_id=113028405]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1752168140]
+environment = SubResource("Entorno")
+
+[node name="Mazmorra" type="Node3D" parent="." unique_id=2004628181]
+
+[node name="SalaCentral" type="Node3D" parent="Mazmorra" unique_id=990884641]
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaCentral" unique_id=845129172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Piso" unique_id=3909222]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Piso" unique_id=688500834]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaCentral" unique_id=1002974628]
+
+[node name="NorteA" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=265808012]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/NorteA" unique_id=696087736]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72263026, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/NorteA" unique_id=1089144365]
+shape = SubResource("ParedNSSegForma")
+
+[node name="NorteB" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1109130909]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/NorteB" unique_id=1399847499]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7253418, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/NorteB" unique_id=1856837192]
+shape = SubResource("ParedNSSegForma")
+
+[node name="SurA" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=230410946]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/SurA" unique_id=1908632805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7137872, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/SurA" unique_id=489499921]
+shape = SubResource("ParedNSSegForma")
+
+[node name="SurB" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1931583681]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/SurB" unique_id=1300703502]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.017112255, 0.72070765, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/SurB" unique_id=1344626946]
+shape = SubResource("ParedNSSegForma")
+
+[node name="EsteA" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1205201396]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/EsteA" unique_id=913263729]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.69279337, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/EsteA" unique_id=1692281530]
+shape = SubResource("ParedEOSegForma")
+
+[node name="EsteB" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1239582151]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/EsteB" unique_id=1186416139]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70532894, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/EsteB" unique_id=1819043942]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteA" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1578820540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/OesteA" unique_id=1677676916]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7008767, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/OesteA" unique_id=1659515103]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteB" type="StaticBody3D" parent="Mazmorra/SalaCentral/Paredes" unique_id=1064209172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaCentral/Paredes/OesteB" unique_id=1622815966]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68313956, 0.020233393)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaCentral/Paredes/OesteB" unique_id=1670161149]
+shape = SubResource("ParedEOSegForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaCentral" unique_id=1284397490]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaCentral/Antorchas" unique_id=615622699 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+
+[node name="AntorchaNO" parent="Mazmorra/SalaCentral/Antorchas" unique_id=1365275172 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 19
+
+[node name="AntorchaSE" parent="Mazmorra/SalaCentral/Antorchas" unique_id=334204904 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 31
+
+[node name="AntorchaSO" parent="Mazmorra/SalaCentral/Antorchas" unique_id=553967848 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 53
+
+[node name="EsqueletoCentral1" parent="Mazmorra/SalaCentral" unique_id=792350514 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3.5)
+
+[node name="EsqueletoCentral2" parent="Mazmorra/SalaCentral" unique_id=1058094723 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, -3.5)
+
+[node name="CorazonInicial" parent="Mazmorra/SalaCentral" unique_id=231841738 instance=ExtResource("18_corazon")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.000041, 0.55, -4.8617544)
+
+[node name="ArmaInicial" parent="Mazmorra/SalaCentral" unique_id=878116361 instance=ExtResource("19_arma")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.023543, 0.55, -4.859721)
+
+[node name="Cajas" type="Node3D" parent="Mazmorra/SalaCentral" unique_id=1861007808]
+
+[node name="CajaRecursosCentral" parent="Mazmorra/SalaCentral/Cajas" unique_id=942782389 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3957505, 0, 4.490182)
+
+[node name="BarrilCentral" parent="Mazmorra/SalaCentral/Cajas" unique_id=1338225754 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.259426, 0, 4.0082197)
+armas_al_romper = 1
+
+[node name="Caja falsa" parent="Mazmorra/SalaCentral/Cajas" unique_id=1009967771 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4444275, 0, 2.945076)
+script = ExtResource("9_3fa85")
+color_cuerpo = Color(0.54509807, 0.3529412, 0.16862746, 1)
+color_detalle = Color(0.7882353, 0.63529414, 0.15294118, 1)
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaCentral"]
+
+[node name="CofreCentral" parent="Mazmorra/SalaCentral/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 4.5)
+recompensa = 2
+
+[node name="CofreEste" parent="Mazmorra/SalaCentral/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, -3)
+recompensa = 2
+
+[node name="SalaNorte" type="Node3D" parent="Mazmorra" unique_id=1362507603]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaNorte" unique_id=561129435]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Piso" unique_id=887610539]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Piso" unique_id=1376381644]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaNorte" unique_id=1989729324]
+
+[node name="Norte" type="StaticBody3D" parent="Mazmorra/SalaNorte/Paredes" unique_id=1759065872]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Paredes/Norte" unique_id=1252588698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7064898, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Paredes/Norte" unique_id=731475277]
+shape = SubResource("ParedNSForma")
+
+[node name="SurA" type="StaticBody3D" parent="Mazmorra/SalaNorte/Paredes" unique_id=1269543923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Paredes/SurA" unique_id=957244293]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7298639, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Paredes/SurA" unique_id=525254513]
+shape = SubResource("ParedNSSegForma")
+
+[node name="SurB" type="StaticBody3D" parent="Mazmorra/SalaNorte/Paredes" unique_id=15443529]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Paredes/SurB" unique_id=1328993654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7184739, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Paredes/SurB" unique_id=183352760]
+shape = SubResource("ParedNSSegForma")
+
+[node name="Este" type="StaticBody3D" parent="Mazmorra/SalaNorte/Paredes" unique_id=62304099]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Paredes/Este" unique_id=155951641]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7342458, 0)
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Paredes/Este" unique_id=472321247]
+shape = SubResource("ParedEOForma")
+
+[node name="Oeste" type="StaticBody3D" parent="Mazmorra/SalaNorte/Paredes" unique_id=1091581107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaNorte/Paredes/Oeste" unique_id=853127377]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7295501, 0)
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaNorte/Paredes/Oeste" unique_id=2031248279]
+shape = SubResource("ParedEOForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaNorte" unique_id=1936676399]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaNorte/Antorchas" unique_id=616811855 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+semilla = 101
+
+[node name="AntorchaNO" parent="Mazmorra/SalaNorte/Antorchas" unique_id=2011600166 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 107
+
+[node name="AntorchaSE" parent="Mazmorra/SalaNorte/Antorchas" unique_id=680066429 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 113
+
+[node name="AntorchaSO" parent="Mazmorra/SalaNorte/Antorchas" unique_id=1037438842 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 127
+
+[node name="EsqueletoNorte1" parent="Mazmorra/SalaNorte" unique_id=983153296 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
+
+[node name="EsqueletoNorte2" parent="Mazmorra/SalaNorte" unique_id=1024006178 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaNorte"]
+
+[node name="CofreNorte1" parent="Mazmorra/SalaNorte/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+recompensa = 2
+
+[node name="CofreNorte2" parent="Mazmorra/SalaNorte/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
+recompensa = 2
+
+[node name="SalaSur" type="Node3D" parent="Mazmorra" unique_id=2027270247]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaSur" unique_id=1122210107]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Piso" unique_id=1662145111]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Piso" unique_id=185418531]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaSur" unique_id=1879296413]
+
+[node name="NorteA" type="StaticBody3D" parent="Mazmorra/SalaSur/Paredes" unique_id=247804922]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Paredes/NorteA" unique_id=626843656]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70323586, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Paredes/NorteA" unique_id=1763981654]
+shape = SubResource("ParedNSSegForma")
+
+[node name="NorteB" type="StaticBody3D" parent="Mazmorra/SalaSur/Paredes" unique_id=220564253]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Paredes/NorteB" unique_id=975626409]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.711123, 0)
+mesh = SubResource("ParedNSSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Paredes/NorteB" unique_id=34672076]
+shape = SubResource("ParedNSSegForma")
+
+[node name="Sur" type="StaticBody3D" parent="Mazmorra/SalaSur/Paredes" unique_id=262048982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Paredes/Sur" unique_id=950703698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6732843, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Paredes/Sur" unique_id=1625558676]
+shape = SubResource("ParedNSForma")
+
+[node name="Este" type="StaticBody3D" parent="Mazmorra/SalaSur/Paredes" unique_id=1498064165]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Paredes/Este" unique_id=404253048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70771766, 0)
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Paredes/Este" unique_id=1924210998]
+shape = SubResource("ParedEOForma")
+
+[node name="Oeste" type="StaticBody3D" parent="Mazmorra/SalaSur/Paredes" unique_id=868924573]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaSur/Paredes/Oeste" unique_id=707750816]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.68714595, 0)
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaSur/Paredes/Oeste" unique_id=2078189416]
+shape = SubResource("ParedEOForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaSur" unique_id=190810684]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaSur/Antorchas" unique_id=1091065167 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+semilla = 201
+
+[node name="AntorchaNO" parent="Mazmorra/SalaSur/Antorchas" unique_id=290863025 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 209
+
+[node name="AntorchaSE" parent="Mazmorra/SalaSur/Antorchas" unique_id=214714931 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 223
+
+[node name="AntorchaSO" parent="Mazmorra/SalaSur/Antorchas" unique_id=1456883925 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 239
+
+[node name="EsqueletoSur1" parent="Mazmorra/SalaSur" unique_id=1865754240 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
+
+[node name="EsqueletoSur2" parent="Mazmorra/SalaSur" unique_id=1923546629 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
+
+[node name="BarrilSur" parent="Mazmorra/SalaSur" unique_id=34920969 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.744521, 0, 4.9936867)
+armas_al_romper = 1
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaSur"]
+
+[node name="CofreSur1" parent="Mazmorra/SalaSur/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
+recompensa = 2
+
+[node name="CofreSur2" parent="Mazmorra/SalaSur/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+recompensa = 2
+
+[node name="SalaOeste" type="Node3D" parent="Mazmorra" unique_id=882014369]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaOeste" unique_id=800782743]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Piso" unique_id=1722291661]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Piso" unique_id=203517575]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaOeste" unique_id=1047900577]
+
+[node name="Norte" type="StaticBody3D" parent="Mazmorra/SalaOeste/Paredes" unique_id=224415712]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Paredes/Norte" unique_id=445163429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70387506, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Paredes/Norte" unique_id=1660933747]
+shape = SubResource("ParedNSForma")
+
+[node name="Sur" type="StaticBody3D" parent="Mazmorra/SalaOeste/Paredes" unique_id=731703056]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Paredes/Sur" unique_id=848915640]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7061696, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Paredes/Sur" unique_id=1778025905]
+shape = SubResource("ParedNSForma")
+
+[node name="EsteA" type="StaticBody3D" parent="Mazmorra/SalaOeste/Paredes" unique_id=1759689547]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Paredes/EsteA" unique_id=1923329923]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70595455, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Paredes/EsteA" unique_id=1481408688]
+shape = SubResource("ParedEOSegForma")
+
+[node name="EsteB" type="StaticBody3D" parent="Mazmorra/SalaOeste/Paredes" unique_id=1062882747]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Paredes/EsteB" unique_id=1468976648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7066214, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Paredes/EsteB" unique_id=684810503]
+shape = SubResource("ParedEOSegForma")
+
+[node name="Oeste" type="StaticBody3D" parent="Mazmorra/SalaOeste/Paredes" unique_id=1527566857]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaOeste/Paredes/Oeste" unique_id=469440720]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.733341, 0)
+mesh = SubResource("ParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaOeste/Paredes/Oeste" unique_id=1300800782]
+shape = SubResource("ParedEOForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaOeste" unique_id=1048795974]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaOeste/Antorchas" unique_id=95452135 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+semilla = 301
+
+[node name="AntorchaNO" parent="Mazmorra/SalaOeste/Antorchas" unique_id=2099745233 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 307
+
+[node name="AntorchaSE" parent="Mazmorra/SalaOeste/Antorchas" unique_id=1122566403 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 311
+
+[node name="AntorchaSO" parent="Mazmorra/SalaOeste/Antorchas" unique_id=735035975 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 317
+
+[node name="EsqueletoOeste1" parent="Mazmorra/SalaOeste" unique_id=1544122439 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
+
+[node name="EsqueletoOeste2" parent="Mazmorra/SalaOeste" unique_id=1754396069 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
+
+[node name="CajaRecursosOeste" parent="Mazmorra/SalaOeste" unique_id=870009339 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.070176, 0, 4.4541764)
+
+[node name="CajaRecursosOeste2" parent="Mazmorra/SalaOeste" unique_id=1036794261 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8096485, 0, -4.7525764)
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaOeste"]
+
+[node name="CofreOeste1" parent="Mazmorra/SalaOeste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
+recompensa = 2
+
+[node name="CofreOeste2" parent="Mazmorra/SalaOeste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+recompensa = 2
+
+[node name="SalaEste" type="Node3D" parent="Mazmorra" unique_id=698943275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaEste" unique_id=1376767082]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Piso" unique_id=1874546581]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Piso" unique_id=691113020]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaEste" unique_id=290895882]
+
+[node name="Norte" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=1092268445]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/Norte" unique_id=1195658651]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70995665, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/Norte" unique_id=1790003969]
+shape = SubResource("ParedNSForma")
+
+[node name="Sur" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=575811633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/Sur" unique_id=632445629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70513344, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/Sur" unique_id=1570625481]
+shape = SubResource("ParedNSForma")
+
+[node name="EsteA" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=461454016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/EsteA" unique_id=863017878]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7027354, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/EsteA" unique_id=550120286]
+shape = SubResource("ParedEOSegForma")
+
+[node name="EsteB" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=756589540]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/EsteB" unique_id=775870089]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70936966, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/EsteB" unique_id=1739016176]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteA" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=818193637]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/OesteA" unique_id=1611958196]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6971328, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/OesteA" unique_id=1112920858]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteB" type="StaticBody3D" parent="Mazmorra/SalaEste/Paredes" unique_id=1379487814]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaEste/Paredes/OesteB" unique_id=173895737]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7064185, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaEste/Paredes/OesteB" unique_id=1562871148]
+shape = SubResource("ParedEOSegForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaEste" unique_id=749713067]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaEste/Antorchas" unique_id=856768582 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+semilla = 401
+
+[node name="AntorchaNO" parent="Mazmorra/SalaEste/Antorchas" unique_id=289738899 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 409
+
+[node name="AntorchaSE" parent="Mazmorra/SalaEste/Antorchas" unique_id=2069901520 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 419
+
+[node name="AntorchaSO" parent="Mazmorra/SalaEste/Antorchas" unique_id=1583894534 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 431
+
+[node name="EsqueletoEste1" parent="Mazmorra/SalaEste" unique_id=1634436400 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
+
+[node name="EsqueletoEste2" parent="Mazmorra/SalaEste" unique_id=1224590410 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
+
+[node name="CajaRecursosEste" parent="Mazmorra/SalaEste" unique_id=1117088165 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.199436, 0, 4.916665)
+
+[node name="BarrilEste" parent="Mazmorra/SalaEste" unique_id=2116868124 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5720367, 0, -4.890465)
+armas_al_romper = 1
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaEste"]
+
+[node name="CofreEste1" parent="Mazmorra/SalaEste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, 4)
+recompensa = 2
+
+[node name="CofreEste2" parent="Mazmorra/SalaEste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -4)
+recompensa = 2
+
+[node name="SalaExtremaEste" type="Node3D" parent="Mazmorra" unique_id=1989875287]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste" unique_id=19489032]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Piso" unique_id=165957631]
+mesh = SubResource("PisoMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Piso" unique_id=692134442]
+shape = SubResource("PisoForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/SalaExtremaEste" unique_id=1096997855]
+
+[node name="Norte" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=771119051]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/Norte" unique_id=581410176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.74468994, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/Norte" unique_id=211108494]
+shape = SubResource("ParedNSForma")
+
+[node name="Sur" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=236350934]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 6.25)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/Sur" unique_id=1611084671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7035756, 0)
+mesh = SubResource("ParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/Sur" unique_id=1711109059]
+shape = SubResource("ParedNSForma")
+
+[node name="EsteA" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=1071477686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/EsteA" unique_id=1959167398]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.76738095, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/EsteA" unique_id=1302102035]
+shape = SubResource("ParedEOSegForma")
+
+[node name="EsteB" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=1940099285]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/EsteB" unique_id=1777652994]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7448425, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/EsteB" unique_id=1099975904]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteA" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=740991786]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, -3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/OesteA" unique_id=202554048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70657086, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/OesteA" unique_id=1207115911]
+shape = SubResource("ParedEOSegForma")
+
+[node name="OesteB" type="StaticBody3D" parent="Mazmorra/SalaExtremaEste/Paredes" unique_id=1165485198]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.25, 1, 3.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/SalaExtremaEste/Paredes/OesteB" unique_id=637326944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70445347, 0)
+mesh = SubResource("ParedEOSegMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/SalaExtremaEste/Paredes/OesteB" unique_id=627620462]
+shape = SubResource("ParedEOSegForma")
+
+[node name="Antorchas" type="Node3D" parent="Mazmorra/SalaExtremaEste" unique_id=1566604556]
+
+[node name="AntorchaNE" parent="Mazmorra/SalaExtremaEste/Antorchas" unique_id=1825831787 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, -6)
+semilla = 501
+
+[node name="AntorchaNO" parent="Mazmorra/SalaExtremaEste/Antorchas" unique_id=1486330375 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 1, -6)
+semilla = 509
+
+[node name="AntorchaSE" parent="Mazmorra/SalaExtremaEste/Antorchas" unique_id=656900440 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 5, 1, 6)
+semilla = 521
+
+[node name="AntorchaSO" parent="Mazmorra/SalaExtremaEste/Antorchas" unique_id=1310035923 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
+semilla = 533
+
+[node name="EsqueletoExtremaEste1" parent="Mazmorra/SalaExtremaEste" unique_id=1864071051 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
+
+[node name="EsqueletoExtremaEste2" parent="Mazmorra/SalaExtremaEste" unique_id=1087078734 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
+
+[node name="CajaRecursosExtremaEste" parent="Mazmorra/SalaExtremaEste" unique_id=1797875242 instance=ExtResource("16_caja")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.095745, 0, -2.7229125)
+
+[node name="Cofres" type="Node3D" parent="Mazmorra/SalaExtremaEste"]
+
+[node name="CofreExtremaEste1" parent="Mazmorra/SalaExtremaEste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, 4)
+recompensa = 2
+
+[node name="CofreExtremaEste2" parent="Mazmorra/SalaExtremaEste/Cofres" instance=ExtResource("20_cofre")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -4)
+recompensa = 2
+
+[node name="Pasillos" type="Node3D" parent="Mazmorra" unique_id=992361665]
+
+[node name="PasilloCentralNorte" type="Node3D" parent="Mazmorra/Pasillos" unique_id=312555436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -10)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralNorte" unique_id=1892215314]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Piso" unique_id=1394686813]
+mesh = SubResource("PasilloPisoNSMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Piso" unique_id=1521775962]
+shape = SubResource("PasilloPisoNSForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloCentralNorte" unique_id=1548490248]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes" unique_id=1250007224]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes/LadoA" unique_id=673569678]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7343377, 0)
+mesh = SubResource("PasilloParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes/LadoA" unique_id=63127243]
+shape = SubResource("PasilloParedNSForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes" unique_id=1830624324]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes/LadoB" unique_id=1536565232]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7229006, 0)
+mesh = SubResource("PasilloParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralNorte/Paredes/LadoB" unique_id=802087753]
+shape = SubResource("PasilloParedNSForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloCentralNorte" unique_id=790701006 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.5, 1, 0)
+semilla = 601
+sombras = false
+alcance = 9.0
+
+[node name="PasilloCentralSur" type="Node3D" parent="Mazmorra/Pasillos" unique_id=916705172]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralSur" unique_id=204742841]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Piso" unique_id=866359187]
+mesh = SubResource("PasilloPisoNSMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Piso" unique_id=1923340774]
+shape = SubResource("PasilloPisoNSForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloCentralSur" unique_id=1267819432]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes" unique_id=1200670226]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes/LadoA" unique_id=1080424140]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7146683, 0)
+mesh = SubResource("PasilloParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes/LadoA" unique_id=1872352112]
+shape = SubResource("PasilloParedNSForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes" unique_id=260070054]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes/LadoB" unique_id=923632563]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.72046757, 0)
+mesh = SubResource("PasilloParedNSMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralSur/Paredes/LadoB" unique_id=1097397122]
+shape = SubResource("PasilloParedNSForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloCentralSur" unique_id=1733461376 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -1.5, 1, 0)
+semilla = 613
+sombras = false
+alcance = 9.0
+
+[node name="PasilloCentralOeste" type="Node3D" parent="Mazmorra/Pasillos" unique_id=1871341616]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralOeste" unique_id=1298845048]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Piso" unique_id=1889979039]
+mesh = SubResource("PasilloPisoEOMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Piso" unique_id=1064480422]
+shape = SubResource("PasilloPisoEOForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloCentralOeste" unique_id=865017202]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes" unique_id=1978715597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes/LadoA" unique_id=1136683129]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70048547, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes/LadoA" unique_id=565432531]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes" unique_id=1823502072]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes/LadoB" unique_id=911870436]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7026007, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralOeste/Paredes/LadoB" unique_id=1221181041]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloCentralOeste" unique_id=1999070475 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.5)
+semilla = 625
+sombras = false
+alcance = 9.0
+
+[node name="PasilloCentralEste" type="Node3D" parent="Mazmorra/Pasillos" unique_id=1111550495]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralEste" unique_id=1122369114]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Piso" unique_id=1739096172]
+mesh = SubResource("PasilloPisoEOMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Piso" unique_id=64494846]
+shape = SubResource("PasilloPisoEOForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloCentralEste" unique_id=1245911712]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes" unique_id=492163473]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes/LadoA" unique_id=1654599514]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6907203, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes/LadoA" unique_id=287022927]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes" unique_id=1766925534]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes/LadoB" unique_id=114985539]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6926539, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloCentralEste/Paredes/LadoB" unique_id=1523251498]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloCentralEste" unique_id=1133598960 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.5)
+semilla = 637
+sombras = false
+alcance = 9.0
+
+[node name="PasilloEsteExtremo" type="Node3D" parent="Mazmorra/Pasillos" unique_id=1449851399]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 30, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo" unique_id=230281103]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Piso" unique_id=1550406183]
+mesh = SubResource("PasilloPisoEOMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Piso" unique_id=1346399893]
+shape = SubResource("PasilloPisoEOForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo" unique_id=932149941]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes" unique_id=1019403914]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes/LadoA" unique_id=315828638]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6940901, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes/LadoA" unique_id=1045330019]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes" unique_id=1909032997]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes/LadoB" unique_id=501617564]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6972904, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloEsteExtremo/Paredes/LadoB" unique_id=1834563884]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloEsteExtremo" unique_id=1912501321 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.5)
+semilla = 649
+sombras = false
+alcance = 9.0
+
+[node name="PasilloJefe" type="Node3D" parent="Mazmorra/Pasillos" unique_id=1070302523]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 0, 0)
+
+[node name="Piso" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloJefe" unique_id=1190580830]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloJefe/Piso" unique_id=1936196520]
+mesh = SubResource("PasilloPisoEOMalla")
+surface_material_override/0 = ExtResource("1_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloJefe/Piso" unique_id=1361399321]
+shape = SubResource("PasilloPisoEOForma")
+
+[node name="Paredes" type="Node3D" parent="Mazmorra/Pasillos/PasilloJefe" unique_id=507811516]
+
+[node name="LadoA" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes" unique_id=496555068]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes/LadoA" unique_id=1826362772]
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes/LadoA/MeshInstance3D" unique_id=1310160263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75710106, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes/LadoA" unique_id=1199315425]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="LadoB" type="StaticBody3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes" unique_id=1121693763]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1.75)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes/LadoB" unique_id=1452662844]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75024414, 0)
+mesh = SubResource("PasilloParedEOMalla")
+surface_material_override/0 = SubResource("MuroMat")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Mazmorra/Pasillos/PasilloJefe/Paredes/LadoB" unique_id=1418466550]
+shape = SubResource("PasilloParedEOForma")
+
+[node name="Antorcha" parent="Mazmorra/Pasillos/PasilloJefe" unique_id=1802904873 instance=ExtResource("3_p7bnq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -1.5)
+semilla = 661
+sombras = false
+alcance = 9.0
+
+[node name="SalaJefe" parent="Mazmorra" unique_id=499804946 node_paths=PackedStringArray("personaje") instance=ExtResource("11_jefe")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 62, 0, 0)
+personaje = NodePath("../../Personaje")
+
+[node name="EsqueletoJefe1" parent="Mazmorra/SalaJefe" unique_id=1011336522 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0.05, 3)
+
+[node name="EsqueletoJefe2" parent="Mazmorra/SalaJefe" unique_id=422144028 instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.05, 3)
+
+[node name="Disparador" type="Area3D" parent="." unique_id=171483001]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -4.9)
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_ar1si")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Disparador" unique_id=151143668]
+shape = SubResource("DisparadorForma")
+
+[node name="LuzEvento" type="OmniLight3D" parent="." unique_id=1777134543]
+light_energy = 0.0
+omni_range = 4.0
+omni_attenuation = 2.0
+
+[node name="LuzCorazones" type="OmniLight3D" parent="." unique_id=189441370]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+light_color = Color(0.949, 0.639, 0.227, 1)
+omni_range = 12.0
+omni_attenuation = 2.0
+
+[node name="SistemaEventos" type="Node" parent="." unique_id=143367544 node_paths=PackedStringArray("luz_evento", "luz_variable")]
+script = ExtResource("5_6fba8")
+luz_evento = NodePath("../LuzEvento")
+luz_variable = NodePath("../LuzCorazones")
+color_bajo = Color(0.949, 0.639, 0.227, 1)
+color_alto = Color(0.839, 0.227, 0.227, 1)
+
+[node name="PivoteCamara" type="Node3D" parent="." unique_id=1696538595 node_paths=PackedStringArray("objetivo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
+script = ExtResource("6_yaehp")
+objetivo = NodePath("../Personaje")
+
+[node name="SpringArm3D" type="SpringArm3D" parent="PivoteCamara" unique_id=1835550954]
+transform = Transform3D(1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 0, 0)
+spring_length = 8.0
+margin = 0.3
+
+[node name="Camera3D" type="Camera3D" parent="PivoteCamara/SpringArm3D" unique_id=903305812]
+
+[node name="Personaje" type="CharacterBody3D" parent="." unique_id=1465553144 node_paths=PackedStringArray("camara")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.5)
+collision_layer = 8
+script = ExtResource("7_d1osm")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+speed = 4.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Personaje" unique_id=1102243552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.875, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="Personaje" unique_id=934760584 instance=ExtResource("8_ie7uf")]
+transform = Transform3D(-2.6, 0, 0, 0, 2.6, 0, 0, 0, -2.6, 0, 0, 0)
+
+[node name="Espada" type="Node" parent="Personaje" unique_id=881546108]
+script = ExtResource("9_gwx4l")
+recarga = 0.3
+
+[node name="Arma" type="Node" parent="Personaje" unique_id=1776022648]
+script = ExtResource("14_arma")
+largo_hoja = 0.4
+
+[node name="Apuntar" type="Node" parent="Personaje" unique_id=177183991]
+script = ExtResource("10_fkbji")
+alcance = 1.4
+
+[node name="Salud" type="Node" parent="Personaje" unique_id=1881644014 node_paths=PackedStringArray("sistema_eventos")]
+script = ExtResource("12_salud")
+sistema_eventos = NodePath("../../SistemaEventos")
+
+[node name="Hud" type="CanvasLayer" parent="." unique_id=279423724 node_paths=PackedStringArray("salud")]
+script = ExtResource("13_hud")
+salud = NodePath("../Personaje/Salud")

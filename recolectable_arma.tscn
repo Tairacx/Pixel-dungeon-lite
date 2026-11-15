@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://recolectable_arma.gd" id="1_arma"]
+
+[sub_resource type="SphereShape3D" id="ArmaForma"]
+radius = 0.38
+
+[sub_resource type="StandardMaterial3D" id="ArmaVistaMat"]
+albedo_color = Color(0.75, 0.91, 1, 1)
+roughness = 0.4
+emission_enabled = true
+emission = Color(0.27, 0.85, 1, 1)
+emission_energy_multiplier = 0.9
+
+[sub_resource type="BoxMesh" id="ArmaVistaMalla"]
+size = Vector3(0.1, 0.72, 0.06)
+
+[node name="Arma" type="Area3D"]
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("1_arma")
+
+[node name="Forma" type="CollisionShape3D" parent="."]
+shape = SubResource("ArmaForma")
+
+[node name="VistaEditor" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.05, 0)
+mesh = SubResource("ArmaVistaMalla")
+material_override = SubResource("ArmaVistaMat")

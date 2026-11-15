@@ -1,0 +1,257 @@
+[gd_scene format=3 uid="uid://dkagsaxuv285v"]
+
+[ext_resource type="Script" uid="uid://doguowaqjgy2g" path="res://luz_parpadeante.gd" id="1_luz"]
+[ext_resource type="Script" uid="uid://chd0ix4salfqd" path="res://antorcha_pixel.gd" id="2_pix"]
+[ext_resource type="Texture2D" uid="uid://dsygmkeqo1vb" path="res://antorcha_pixel.png" id="3_tex"]
+[ext_resource type="Script" uid="uid://mq7nniv30ya" path="res://antorcha.gd" id="4_raiz"]
+[ext_resource type="AudioStream" uid="uid://discsx27igmvt" path="res://fuego.wav" id="5_snd"]
+
+[sub_resource type="BoxMesh" id="PlacaMalla"]
+size = Vector3(0.3, 0.35, 0.04)
+
+[sub_resource type="StandardMaterial3D" id="Hierro"]
+albedo_color = Color(0.17, 0.155, 0.2, 1)
+metallic = 0.5
+roughness = 0.55
+
+[sub_resource type="CylinderMesh" id="PlacaBaseMalla"]
+top_radius = 0.15
+bottom_radius = 0.15
+height = 0.04
+radial_segments = 14
+rings = 1
+
+[sub_resource type="BoxMesh" id="SoporteMalla"]
+size = Vector3(0.08, 0.1, 0.1)
+
+[sub_resource type="StandardMaterial3D" id="HierroClaro"]
+albedo_color = Color(0.3, 0.28, 0.35, 1)
+metallic = 0.5
+roughness = 0.5
+
+[sub_resource type="CylinderMesh" id="MangoMalla"]
+top_radius = 0.032
+bottom_radius = 0.04
+height = 0.5
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="CollarMalla"]
+top_radius = 0.06738281
+bottom_radius = 0.06738281
+height = 0.05
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="BarraMalla"]
+size = Vector3(0.024, 0.3, 0.024)
+
+[sub_resource type="TorusMesh" id="AroMalla"]
+inner_radius = 0.132
+outer_radius = 0.156
+rings = 16
+ring_segments = 6
+
+[sub_resource type="CylinderMesh" id="FondoMalla"]
+top_radius = 0.136
+bottom_radius = 0.116
+height = 0.02
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderMesh" id="BrasasMalla"]
+top_radius = 0.116
+bottom_radius = 0.116
+height = 0.012
+radial_segments = 12
+rings = 1
+
+[sub_resource type="StandardMaterial3D" id="Brasa"]
+albedo_color = Color(0.45, 0.12, 0.05, 1)
+emission_enabled = true
+emission = Color(1, 0.45, 0.1, 1)
+emission_energy_multiplier = 1.6
+
+[sub_resource type="Gradient" id="ChispasGradiente"]
+offsets = PackedFloat32Array(0, 0.55, 1)
+colors = PackedColorArray(1, 0.86, 0.4, 1, 0.95, 0.55, 0.15, 1, 0.8, 0.2, 0.1, 0)
+
+[sub_resource type="GradientTexture1D" id="ChispasTextura"]
+gradient = SubResource("ChispasGradiente")
+
+[sub_resource type="ParticleProcessMaterial" id="ChispasProceso"]
+emission_shape = 1
+emission_sphere_radius = 0.14
+direction = Vector3(0, 1, 0)
+spread = 30.0
+initial_velocity_min = 0.4
+initial_velocity_max = 0.9
+gravity = Vector3(0, 0.1, 0)
+scale_min = 0.6
+scale_max = 1.2
+color_ramp = SubResource("ChispasTextura")
+
+[sub_resource type="StandardMaterial3D" id="ChispaMat"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="ChispaQuad"]
+material = SubResource("ChispaMat")
+size = Vector2(0.03, 0.03)
+
+[node name="Antorcha" type="Node3D" unique_id=285062390]
+script = ExtResource("4_raiz")
+
+[node name="Modelo" type="Node3D" parent="." unique_id=504000111]
+
+[node name="Placa" type="MeshInstance3D" parent="Modelo" unique_id=298669415]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.075, 0.02)
+cast_shadow = 0
+mesh = SubResource("PlacaMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="PlacaBase" type="MeshInstance3D" parent="Modelo" unique_id=1156926594]
+transform = Transform3D(1, 0, 0, 0, 0, 1, 0, -1, 0, 0, -0.1, 0.02)
+cast_shadow = 0
+mesh = SubResource("PlacaBaseMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Soporte" type="MeshInstance3D" parent="Modelo" unique_id=1146503697]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0066904724, 0.08822827)
+cast_shadow = 0
+mesh = SubResource("SoporteMalla")
+surface_material_override/0 = SubResource("HierroClaro")
+
+[node name="Mango" type="MeshInstance3D" parent="Modelo" unique_id=1610719532]
+transform = Transform3D(1, 0, 0, 0, 0.8660278, -0.5000014, 0, 0.5000014, 0.8660278, 0, 0.18658, 0.16565)
+cast_shadow = 0
+mesh = SubResource("MangoMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="CollarBajo" type="MeshInstance3D" parent="Modelo" unique_id=1594153267]
+transform = Transform3D(1, 0, 0, 0, 1.0000027, 0, 0, 0, 1.0000027, 0, 0.029812664, 0.089583)
+cast_shadow = 0
+mesh = SubResource("CollarMalla")
+surface_material_override/0 = SubResource("HierroClaro")
+
+[node name="CollarAlto" type="MeshInstance3D" parent="Modelo" unique_id=1411180323]
+transform = Transform3D(1, 0, 0, 0, 0.99619734, -0.08715597, 0, 0.08715597, 0.99619734, 0, 0.39998358, 0.28539455)
+cast_shadow = 0
+mesh = SubResource("CollarMalla")
+surface_material_override/0 = SubResource("HierroClaro")
+
+[node name="Cesta" type="Node3D" parent="Modelo" unique_id=197195817]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.28705528)
+
+[node name="Barra1" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=655298339]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.136, 0.56315, 0)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra2" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1138206733]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.096167, 0.56315, 0.096167)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra3" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=281703256]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.3276e-18, 0.56315, 0.136)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra4" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1144762466]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.096167, 0.56315, 0.096167)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra5" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=479073340]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.136, 0.56315, 1.6655e-17)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra6" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1189558335]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.096167, 0.56315, -0.096167)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra7" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1069397017]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4983e-17, 0.56315, -0.136)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Barra8" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=2110656658]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.096167, 0.56315, -0.096167)
+cast_shadow = 0
+mesh = SubResource("BarraMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="AroSuperior" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1368217811]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.70115, 0)
+cast_shadow = 0
+mesh = SubResource("AroMalla")
+surface_material_override/0 = SubResource("HierroClaro")
+
+[node name="AroMedio" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=684132686]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56315, 0)
+cast_shadow = 0
+mesh = SubResource("AroMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Fondo" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=1728486588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.42315, 0)
+cast_shadow = 0
+mesh = SubResource("FondoMalla")
+surface_material_override/0 = SubResource("Hierro")
+
+[node name="Brasas" type="MeshInstance3D" parent="Modelo/Cesta" unique_id=395967090]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.43915, 0)
+cast_shadow = 0
+mesh = SubResource("BrasasMalla")
+surface_material_override/0 = SubResource("Brasa")
+
+[node name="Fuego" type="Sprite3D" parent="." unique_id=1117835669]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.59715, 0.2849317)
+cast_shadow = 0
+pixel_size = 0.012
+billboard = 1
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("3_tex")
+hframes = 4
+vframes = 4
+script = ExtResource("2_pix")
+
+[node name="Chispas" type="GPUParticles3D" parent="." unique_id=209857735]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65315, 0.28129038)
+amount = 10
+lifetime = 1.4
+process_material = SubResource("ChispasProceso")
+draw_pass_1 = SubResource("ChispaQuad")
+
+[node name="Luz" type="OmniLight3D" parent="." unique_id=1924612037]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.62315, 0.29131)
+light_color = Color(0.949, 0.639, 0.227, 1)
+shadow_enabled = true
+omni_range = 12.0
+omni_attenuation = 2.0
+script = ExtResource("1_luz")
+amplitud = 0.35
+
+[node name="Sonido" type="AudioStreamPlayer3D" parent="." unique_id=1322679673]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.56315, 0.27131)
+stream = ExtResource("5_snd")
+volume_db = -14.0
+unit_size = 3.0
+max_distance = 14.0
