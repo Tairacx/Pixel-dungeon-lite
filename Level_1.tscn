@@ -1163,7 +1163,7 @@ largo_hoja = 0.4
 
 [node name="Apuntar" type="Node" parent="Personaje" unique_id=177183991]
 script = ExtResource("10_fkbji")
-alcance = 1.4
+alcance = 1.7
 
 [node name="Salud" type="Node" parent="Personaje" unique_id=1881644014 node_paths=PackedStringArray("sistema_eventos")]
 script = ExtResource("12_salud")

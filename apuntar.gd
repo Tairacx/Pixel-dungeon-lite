@@ -2,7 +2,7 @@ extends Node
 # El daño de la espada: lanza un rayo corto hacia adelante, pero SOLO cuando la espada
 # baja (Espada.golpe, en el momento justo de la animación). Un clic = un golpe.
 
-@export var alcance = 1.25
+@export var alcance = 1.6
 @export_enum("Personaje", "Centro de la cámara", "Mouse") var desde = 0
 @export var danio = 1
 
