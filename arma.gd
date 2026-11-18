@@ -12,10 +12,21 @@ extends Node
 @export var posicion := Vector3(-0.24, 0, 0)       # dónde queda respecto a arm-right
 @export var rotacion_grados := Vector3(90.0, 0.0, 0.0)  # 90 en X = la hoja apunta hacia adelante
 
+# Tajo lateral: durante el ataque la espada barre en horizontal frente al héroe, de su
+# derecha a su izquierda, sin depender de la animación del brazo.
+@export var barrido_grados := 200.0     # ángulo total del tajo (centrado al frente)
+@export var barrido_duracion := 0.18    # s que tarda en cruzar (centrado en el momento del golpe)
+@export var entrada_salida := 0.07      # s para pasar de la pose de reposo al tajo y de vuelta
+
 var espada: Node3D
 var nivel := 0
 var _hoja: MeshInstance3D
 var _luz: OmniLight3D
+var _mano: Node3D
+var _atacando := false
+var _t := 0.0
+var _duracion := 0.42
+var _momento := 0.2
 
 
 func _ready() -> void:
@@ -27,7 +38,57 @@ func _ready() -> void:
 	espada.position = posicion
 	espada.rotation_degrees = rotacion_grados
 	mano.add_child(espada)
+	_mano = mano
 	print("Arma: espada colgada de la mano en ", get_parent().name)
+	var ataque = get_parent().get_node_or_null("Espada")   # los enemigos no tienen este nodo
+	if ataque != null and ataque.has_signal("ataque_iniciado"):
+		ataque.ataque_iniciado.connect(_on_ataque_iniciado)
+
+
+func _on_ataque_iniciado(duracion: float, momento: float) -> void:
+	_atacando = true
+	_t = 0.0
+	_duracion = duracion
+	_momento = momento
+
+
+func _process(delta: float) -> void:
+	if not _atacando or espada == null or _mano == null:
+		return
+	_t += delta
+	if _t >= _duracion:
+		_atacando = false
+		espada.position = posicion                  # vuelve a quedar en la mano
+		espada.rotation_degrees = rotacion_grados
+		return
+
+	# Pose normal (sujeta a la mano) y pose de tajo; se mezclan al entrar y al salir.
+	var reposo := _mano.global_transform * Transform3D(
+		Basis.from_euler(Vector3(deg_to_rad(rotacion_grados.x), deg_to_rad(rotacion_grados.y),
+		deg_to_rad(rotacion_grados.z))), posicion)
+	var tajo := _transform_tajo()
+	var peso := minf(clampf(_t / entrada_salida, 0.0, 1.0),
+		clampf((_duracion - _t) / entrada_salida, 0.0, 1.0))
+	espada.global_transform = reposo.interpolate_with(tajo, peso)
+
+
+# La espada en horizontal, con la hoja apuntando hacia donde barre: de la derecha del
+# héroe (antes del golpe) a su izquierda (después), cruzando el frente en "momento".
+func _transform_tajo() -> Transform3D:
+	var pj3 := get_parent() as Node3D
+	var u := clampf((_t - (_momento - barrido_duracion * 0.5)) / barrido_duracion, 0.0, 1.0)
+	u = u * u * (3.0 - 2.0 * u)                     # arranca y frena suave
+	var mitad := deg_to_rad(barrido_grados) * 0.5
+	var angulo := lerpf(-mitad, mitad, u)           # negativo = derecha, positivo = izquierda
+	var frente: Vector3 = -pj3.global_basis.z
+	frente.y = 0.0
+	var dir := frente.normalized().rotated(Vector3.UP, angulo)
+	var escala := _mano.global_basis.x.length()     # el modelo está escalado x2.6
+	var eje_y := dir                                 # la hoja apunta hacia afuera
+	var eje_z := Vector3.UP                          # plano de la hoja horizontal (corta de lado)
+	var eje_x := eje_y.cross(eje_z)
+	var origen_mano: Vector3 = _mano.global_transform * posicion
+	return Transform3D(Basis(eje_x, eje_y, eje_z).scaled(Vector3.ONE * escala), origen_mano)
 
 
 func _construir() -> Node3D:
