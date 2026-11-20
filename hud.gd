@@ -23,9 +23,15 @@ var _nombre_jefe: Label
 var _jefe_muerto := false
 var _jefe_golpeado := false
 
+# --- Pantalla de victoria (al matar al Rey Esqueleto) ---
+var _victoria: Control
+var _texto_tiempo: Label
+var _inicio_ms := Time.get_ticks_msec()
+
 
 func _ready() -> void:
 	layer = 10
+	process_mode = Node.PROCESS_MODE_ALWAYS   # el HUD sigue activo cuando el juego se pausa al ganar
 	add_to_group("hud")   # los recolectables avisan aquí lo que se recogió
 	_construir()
 	call_deferred("_buscar_jefe")
@@ -125,6 +131,8 @@ func _construir() -> void:
 	boton.pressed.connect(_reiniciar)
 	caja.add_child(boton)
 
+	_construir_victoria()
+
 
 func _texto_legible(etiqueta: Label, tamano: int) -> void:
 	etiqueta.add_theme_font_size_override("font_size", tamano)
@@ -167,12 +175,13 @@ func _on_murio() -> void:
 
 
 func _unhandled_input(evento: InputEvent) -> void:
-	if _fin.visible and evento is InputEventKey and evento.pressed and not evento.echo \
-			and evento.keycode == KEY_R:
+	if (_fin.visible or _victoria.visible) and evento is InputEventKey and evento.pressed \
+			and not evento.echo and evento.keycode == KEY_R:
 		_reiniciar()
 
 
 func _reiniciar() -> void:
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 
@@ -262,6 +271,8 @@ func _on_jefe_murio() -> void:
 	t.tween_interval(2.0)
 	t.tween_property(_caja_jefe, "modulate:a", 0.0, 1.0)
 	t.tween_callback(func(): _caja_jefe.visible = false)
+	# Cuando termina la animación de muerte del jefe, se acaba el juego.
+	get_tree().create_timer(2.5).timeout.connect(_mostrar_victoria)
 
 
 # La barra aparece cuando el héroe se acerca al jefe (o en cuanto le pega).
@@ -271,3 +282,71 @@ func _process(_delta: float) -> void:
 	var heroe: Node3D = salud.get_parent()
 	var cerca: bool = _jefe.global_position.distance_to(heroe.global_position) < DISTANCIA_VER_JEFE
 	_caja_jefe.visible = cerca or _jefe_golpeado
+
+
+# ---------------------------------------------------------------------------
+# PANTALLA DE VICTORIA
+# ---------------------------------------------------------------------------
+func _construir_victoria() -> void:
+	_victoria = Control.new()
+	_victoria.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_victoria.visible = false
+	add_child(_victoria)
+
+	var oscuro := ColorRect.new()
+	oscuro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	oscuro.color = Color(0.04, 0.02, 0.08, 0.78)
+	oscuro.mouse_filter = Control.MOUSE_FILTER_STOP   # que el clic no llegue a la cámara
+	_victoria.add_child(oscuro)
+
+	var centro := CenterContainer.new()
+	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_victoria.add_child(centro)
+
+	var caja := VBoxContainer.new()
+	caja.add_theme_constant_override("separation", 18)
+	centro.add_child(caja)
+
+	var titulo := Label.new()
+	titulo.text = "¡VICTORIA!"
+	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_texto_legible(titulo, 72)
+	titulo.add_theme_color_override("font_color", Color("#F2A33A"))
+	caja.add_child(titulo)
+
+	var sub := Label.new()
+	sub.text = "Derrotaste al Rey Esqueleto y escapaste de la mazmorra"
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_texto_legible(sub, 24)
+	caja.add_child(sub)
+
+	_texto_tiempo = Label.new()
+	_texto_tiempo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_texto_legible(_texto_tiempo, 20)
+	_texto_tiempo.add_theme_color_override("font_color", Color("#E8DCC0"))
+	caja.add_child(_texto_tiempo)
+
+	var jugar := Button.new()
+	jugar.text = "Jugar de nuevo  (R)"
+	jugar.custom_minimum_size = Vector2(260, 52)
+	jugar.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	jugar.pressed.connect(_reiniciar)
+	caja.add_child(jugar)
+
+	var salir := Button.new()
+	salir.text = "Salir del juego"
+	salir.custom_minimum_size = Vector2(260, 52)
+	salir.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	salir.pressed.connect(func(): get_tree().quit())
+	caja.add_child(salir)
+
+
+func _mostrar_victoria() -> void:
+	if _fin.visible:
+		return                       # el héroe murió justo antes: gana la pantalla de derrota
+	var seg := int((Time.get_ticks_msec() - _inicio_ms) / 1000.0)
+	_texto_tiempo.text = "Tiempo: %d:%02d" % [floori(seg / 60.0), seg % 60]
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	_victoria.visible = true
+	get_tree().paused = true         # el juego se detiene: ya no hay enemigos ni daño

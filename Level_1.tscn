@@ -22,6 +22,8 @@
 [ext_resource type="PackedScene" path="res://recolectable_corazon.tscn" id="18_corazon"]
 [ext_resource type="PackedScene" path="res://recolectable_arma.tscn" id="19_arma"]
 [ext_resource type="PackedScene" path="res://cofre.tscn" id="20_cofre"]
+[ext_resource type="Script" path="res://puerta.gd" id="21_puerta"]
+[ext_resource type="Script" path="res://sistema_puertas.gd" id="22_sispuertas"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ie7uf"]
 panorama = ExtResource("1_6eo5x")
@@ -1191,3 +1193,75 @@ sistema_eventos = NodePath("../../SistemaEventos")
 [node name="Hud" type="CanvasLayer" parent="." unique_id=279423724 node_paths=PackedStringArray("salud")]
 script = ExtResource("13_hud")
 salud = NodePath("../Personaje/Salud")
+
+[node name="Puertas" type="Node3D" parent="Mazmorra"]
+
+[node name="PuertaNorte" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -13.75)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaCentral")
+nombre_requisito = "la Sala Central"
+orden = 1
+nombre_sala = "la Sala Norte"
+
+[node name="PuertaSur" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 13.75)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaNorte")
+nombre_requisito = "la Sala Norte"
+orden = 2
+nombre_sala = "la Sala Sur"
+
+[node name="PuertaOeste" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -13.75, 0, 0)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaSur")
+nombre_requisito = "la Sala Sur"
+orden = 3
+nombre_sala = "la Sala Oeste"
+
+[node name="PuertaEste" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 13.75, 0, 0)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaOeste")
+nombre_requisito = "la Sala Oeste"
+orden = 4
+nombre_sala = "la Sala Este"
+
+[node name="PuertaExtrema" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 33.75, 0, 0)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaEste")
+nombre_requisito = "la Sala Este"
+orden = 5
+nombre_sala = "la Sala Extrema"
+
+[node name="PuertaJefe" type="StaticBody3D" parent="Mazmorra/Puertas"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 53.76, 0, 0)
+script = ExtResource("21_puerta")
+sala_requerida = NodePath("../../SalaExtremaEste")
+nombre_requisito = "la Sala Extrema"
+orden = 6
+nombre_sala = "la Sala del Jefe"
+es_jefe = true
+
+[node name="EsqueletoCentral1" parent="Mazmorra/SalaCentral" instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.05, -2.5)
+
+[node name="EsqueletoCentral2" parent="Mazmorra/SalaCentral" instance=ExtResource("15_esq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.05, -2.5)
+
+[node name="SistemaPuertas" type="Node" parent="."]
+script = ExtResource("22_sispuertas")
+
+[node name="BarrilJefe1" parent="Mazmorra/SalaJefe" instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
+
+[node name="BarrilJefe2" parent="Mazmorra/SalaJefe" instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
+
+[node name="BarrilJefe3" parent="Mazmorra/SalaJefe" instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 7)
+
+[node name="BarrilJefe4" parent="Mazmorra/SalaJefe" instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
