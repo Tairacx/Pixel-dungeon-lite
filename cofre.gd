@@ -7,7 +7,6 @@ extends StaticBody3D
 #   CORAZON   -> cura un corazón.
 #   ATAQUE    -> sube el daño de la espada en "ataque_bonus".
 #   ALEATORIO -> elige al azar entre los dos (probabilidad_ataque).
-#
 # Mientras el héroe está cerca aparece un aviso ("E" + "Abrir") encima del cofre.
 
 enum Recompensa { CORAZON, ATAQUE, ALEATORIO }
@@ -22,10 +21,15 @@ enum Recompensa { CORAZON, ATAQUE, ALEATORIO }
 @export var color_detalle := Color("#C9A227")
 @export var tamano := Vector3(0.85, 0.55, 0.65)
 
+# Modelo Kenney "Mini Dungeon" (CC0): cofre con tapa animada ("open").
+const MODELO_COFRE := preload("res://objetos/kenney/chest.glb")
+# Medidas reales del GLB; el ancho manda la escala (uniforme, sin deformar).
+const MEDIDAS_COFRE := Vector3(0.5, 0.45, 0.5)
+
 var abierto := false
 var jugador_cerca := false
 
-var _tapa_pivote: Node3D
+var _modelo: Node3D
 var _aviso_e: Label3D
 var _aviso_texto: Label3D
 var _zona: Area3D
@@ -108,9 +112,12 @@ func _abrir_ataque(pj: Node3D) -> void:
 
 
 func _animar_apertura() -> void:
-	var t := create_tween()
-	t.tween_property(_tapa_pivote, "rotation:x", -1.9, 0.45)\
-		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	# La tapa la anima el propio GLB ("open"). Si el modelo no la trae, no pasa nada.
+	if _modelo == null:
+		return
+	var animador := _modelo.find_child("AnimationPlayer", true, false) as AnimationPlayer
+	if animador != null and animador.has_animation("open"):
+		animador.play("open")
 
 
 func _avisar_hud(texto: String) -> void:
@@ -120,7 +127,7 @@ func _avisar_hud(texto: String) -> void:
 
 
 # ---------------------------------------------------------------------------
-# Forma y dibujo (todo con mallas simples, como el resto del juego)
+# Forma y modelo
 # ---------------------------------------------------------------------------
 func _asegurar_forma() -> void:
 	var forma := get_node_or_null("Forma") as CollisionShape3D
@@ -136,27 +143,11 @@ func _asegurar_forma() -> void:
 
 
 func _construir_cuerpo() -> void:
-	var alto := tamano.y
-	# Cuerpo de madera
-	_caja(Vector3(tamano.x, alto, tamano.z), Vector3(0, alto * 0.5, 0), color_cuerpo)
-	# Fleje metálico en la base
-	_caja(Vector3(tamano.x * 1.02, 0.07, tamano.z * 1.02),
-		Vector3(0, alto * 0.12, 0), color_detalle)
-	# Cerradura al frente
-	_caja(Vector3(0.12, 0.16, 0.05),
-		Vector3(0, alto * 0.55, tamano.z * 0.5 + 0.02), color_detalle, Color("#4A2A08"))
-	# Tapa con pivote en el borde trasero (para que gire al abrirse)
-	_tapa_pivote = Node3D.new()
-	_tapa_pivote.name = "TapaPivote"
-	_tapa_pivote.position = Vector3(0, alto, -tamano.z * 0.5)
-	add_child(_tapa_pivote)
-	_caja_en(_tapa_pivote,
-		Vector3(tamano.x * 1.04, 0.14, tamano.z * 1.02),
-		Vector3(0, 0.07, tamano.z * 0.5), color_tapa)
-	# Cierre metálico de la tapa
-	_caja_en(_tapa_pivote,
-		Vector3(0.14, 0.10, 0.06),
-		Vector3(0, -0.02, tamano.z * 0.5 + 0.01), color_detalle)
+	# Escala uniforme por el ancho: el cofre no se deforma y queda apoyado en el piso.
+	_modelo = MODELO_COFRE.instantiate() as Node3D
+	_modelo.name = "Modelo"
+	_modelo.scale = Vector3.ONE * (tamano.x / MEDIDAS_COFRE.x)
+	add_child(_modelo)
 
 
 func _asegurar_zona() -> void:
@@ -182,8 +173,10 @@ func _asegurar_zona() -> void:
 
 
 func _crear_avisos() -> void:
-	_aviso_e = _label("E", 64, Color(1.0, 0.85, 0.3), Vector3(0, tamano.y + 0.55, 0))
-	_aviso_texto = _label("Abrir", 32, Color(1.0, 0.96, 0.85), Vector3(0, tamano.y + 0.18, 0))
+	# El modelo 3D es más alto que tamano.y: los avisos despegan del techo visible.
+	var alto := maxf(tamano.y, MEDIDAS_COFRE.y * (tamano.x / MEDIDAS_COFRE.x))
+	_aviso_e = _label("E", 64, Color(1.0, 0.85, 0.3), Vector3(0, alto + 0.55, 0))
+	_aviso_texto = _label("Abrir", 32, Color(1.0, 0.96, 0.85), Vector3(0, alto + 0.18, 0))
 
 
 func _label(texto: String, tam_fuente: int, color: Color, pos: Vector3) -> Label3D:
@@ -200,38 +193,3 @@ func _label(texto: String, tam_fuente: int, color: Color, pos: Vector3) -> Label
 	etiqueta.visible = false
 	add_child(etiqueta)
 	return etiqueta
-
-
-func _material(color: Color, emision := Color.BLACK) -> StandardMaterial3D:
-	var mat := StandardMaterial3D.new()
-	mat.albedo_color = color
-	mat.roughness = 0.85
-	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	if emision != Color.BLACK:
-		mat.emission_enabled = true
-		mat.emission = emision
-		mat.emission_energy_multiplier = 1.0
-	return mat
-
-
-func _caja(tam: Vector3, pos: Vector3, color: Color, emision := Color.BLACK) -> MeshInstance3D:
-	var caja := BoxMesh.new()
-	caja.size = tam
-	var nodo := MeshInstance3D.new()
-	nodo.mesh = caja
-	nodo.position = pos
-	nodo.material_override = _material(color, emision)
-	add_child(nodo)
-	return nodo
-
-
-func _caja_en(padre: Node, tam: Vector3, pos: Vector3, color: Color,
-		emision := Color.BLACK) -> MeshInstance3D:
-	var caja := BoxMesh.new()
-	caja.size = tam
-	var nodo := MeshInstance3D.new()
-	nodo.mesh = caja
-	nodo.position = pos
-	nodo.material_override = _material(color, emision)
-	padre.add_child(nodo)
-	return nodo

@@ -1,7 +1,7 @@
 extends StaticBody3D
 # Puerta de la mazmorra: bloquea un pasillo hasta que SistemaPuertas la abre.
-# Se arma sola por código (tablones, bandas de hierro y colisión). Al abrirse se hunde en el suelo.
-# Puerta del jefe (es_jefe = true): más grande, con bandas doradas y una joya roja.
+# Se arma sola por código (modelo 3D + colisión). Al abrirse se hunde en el suelo.
+# Puerta del jefe (es_jefe = true): joya roja al centro y remate dorado arriba.
 
 signal abierta
 signal bloqueada                    # el héroe se acercó y la puerta sigue cerrada
@@ -21,11 +21,12 @@ var cerrada := true
 var _hoja: Node3D
 var _colision: CollisionShape3D
 
-const MADERA := Color("#4A3426")
-const MADERA_CLARA := Color("#5C4130")
-const HIERRO := Color("#2B2733")
 const ORO := Color("#F2A33A")
 const ROJO := Color("#D63A3A")
+
+# Modelo Kenney "Mini Dungeon" (CC0): reja de 0.8 x 0.75 x 0.2 (plana, fina en Z).
+const MODELO_PUERTA := preload("res://objetos/kenney/gate.glb")
+const MEDIDAS_PUERTA := Vector3(0.8, 0.75, 0.2)
 
 
 func _ready() -> void:
@@ -47,31 +48,16 @@ func _construir() -> void:
 	_hoja.name = "Hoja"
 	add_child(_hoja)
 
-	var madera := MADERA if not es_jefe else Color("#2E1F2B")
-	var madera_b := MADERA_CLARA if not es_jefe else Color("#3F2A3A")
-	var metal := HIERRO if not es_jefe else ORO
-
-	# Tablones verticales (alternan de color para que se vea la veta).
-	var n := 6
-	var w := ancho / n
-	for i in range(n):
-		var x := -ancho / 2.0 + w * (i + 0.5)
-		_caja(Vector3(w - 0.03, alto, grosor), Vector3(x, alto / 2.0, 0), madera if i % 2 == 0 else madera_b)
-
-	# Bandas horizontales y remaches.
-	for y in [alto * 0.22, alto * 0.78]:
-		_caja(Vector3(ancho, 0.2, grosor + 0.08), Vector3(0, y, 0), metal)
-		for x in [-ancho / 2.0 + 0.2, ancho / 2.0 - 0.2, 0.0]:
-			_caja(Vector3(0.12, 0.12, grosor + 0.14), Vector3(x, y, 0), HIERRO if not es_jefe else madera)
-
-	# Barra central y aldaba (un aro de hierro hecho con cajas).
-	_caja(Vector3(0.1, alto, grosor + 0.04), Vector3(0, alto / 2.0, 0), HIERRO if not es_jefe else ORO)
-	for x in [-0.28, 0.28]:
-		_caja(Vector3(0.1, 0.3, grosor + 0.1), Vector3(x, alto * 0.5, 0), HIERRO)
-	_caja(Vector3(0.66, 0.1, grosor + 0.1), Vector3(0, alto * 0.5 - 0.15, 0), HIERRO)
+	# La reja del pack se estira para llenar el hueco de la puerta.
+	var modelo := MODELO_PUERTA.instantiate() as Node3D
+	modelo.name = "Modelo"
+	modelo.scale = Vector3(ancho / MEDIDAS_PUERTA.x, alto / MEDIDAS_PUERTA.y,
+		grosor / MEDIDAS_PUERTA.z)
+	_hoja.add_child(modelo)
 
 	if es_jefe:
 		# Joya roja brillante en el centro, y una corona de picos arriba.
+		# El rojo es el color reservado a peligro: solo la puerta del jefe lo lleva.
 		_caja(Vector3(0.36, 0.36, grosor + 0.2), Vector3(0, alto * 0.62, 0), ROJO, ROJO)
 		for i in range(5):
 			var px := -ancho / 2.0 + ancho * (i + 0.5) / 5.0

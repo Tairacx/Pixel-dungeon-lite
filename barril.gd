@@ -3,6 +3,11 @@ extends "res://contenedor_rompible.gd"
 # Barril de vida: solo suelta corazones. Nunca armas.
 # Se rompe con la espada (recibir_golpe) y avisa al SistemaEventos para el destello.
 
+# Modelo Kenney "Mini Dungeon" (CC0). Ya viene apoyado en el piso (Y = 0).
+const MODELO_BARRIL := preload("res://objetos/kenney/barrel.glb")
+# Medidas reales del GLB, solo para escalarlo a "tamano".
+const MEDIDAS_BARRIL := Vector3(0.5176, 0.4762, 0.5176)
+
 
 func _ready() -> void:
 	armas_al_romper = 0
@@ -11,16 +16,12 @@ func _ready() -> void:
 
 
 func _construir_cuerpo() -> void:
-	var alto := tamano.y
-	var radio := tamano.x * 0.46
-	# Cuerpo de madera
-	_cilindro(radio, alto, Vector3(0, alto * 0.5, 0), color_cuerpo)
-	# Aros de hierro
-	for y in [alto * 0.15, alto * 0.50, alto * 0.85]:
-		_cilindro(radio + 0.012, 0.075, Vector3(0, y, 0), color_detalle)
-	# Tapa y base
-	_cilindro(radio * 0.98, 0.05, Vector3(0, alto - 0.025, 0), color_detalle)
-	_cilindro(radio * 0.98, 0.05, Vector3(0, 0.025, 0), color_detalle)
+	# El GLB se estira por eje: redondo en planta y de la altura pedida.
+	var modelo := MODELO_BARRIL.instantiate() as Node3D
+	modelo.name = "Modelo"
+	modelo.scale = Vector3(tamano.x / MEDIDAS_BARRIL.x, tamano.y / MEDIDAS_BARRIL.y,
+		tamano.z / MEDIDAS_BARRIL.z)
+	add_child(modelo)
 
 
 func _forma_por_defecto() -> Shape3D:
