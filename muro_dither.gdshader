@@ -1,7 +1,7 @@
 shader_type spatial;
 // Muro con transparencia por "dithering" (screen-door). Cuando fade < 1 se descartan
-// píxeles con un patrón Bayer 4x4, así el muro se ve semitransparente sin los problemas
-// de orden de transparencias del renderizador GL Compatibility.
+// píxeles con un patrón pseudoaleatorio, así el muro se ve semitransparente sin los
+// problemas de orden de transparencias del renderizador GL Compatibility.
 //
 // fade = 1.0 -> opaco (igual que el material original).
 // fade = 0.0 -> invisible.
@@ -17,12 +17,12 @@ uniform float roughness_val = 0.9;
 varying vec3 wpos;
 varying vec3 wnormal;
 
-const float BAYER[16] = float[16](
-	0.0,  8.0,  2.0, 10.0,
-	12.0, 4.0, 14.0,  6.0,
-	3.0, 11.0,  1.0,  9.0,
-	15.0, 7.0, 13.0,  5.0
-);
+// Ruido pseudoaleatorio estable por píxel (sin arrays ni índices dinámicos).
+float hash12(vec2 p) {
+	vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+	p3 += dot(p3, p3.yzx + 33.33);
+	return fract((p3.x + p3.y) * p3.z);
+}
 
 void vertex() {
 	wpos = (MODEL_MATRIX * vec4(VERTEX, 1.0)).xyz;
@@ -31,10 +31,7 @@ void vertex() {
 
 void fragment() {
 	if (fade < 0.999) {
-		int ix = int(FRAGCOORD.x) % 4;
-		int iy = int(FRAGCOORD.y) % 4;
-		float thr = (BAYER[iy * 4 + ix] + 0.5) / 16.0;
-		if (fade <= thr) {
+		if (fade <= hash12(FRAGCOORD.xy)) {
 			discard;
 		}
 	}
