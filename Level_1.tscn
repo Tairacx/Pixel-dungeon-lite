@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dkagsaxuv285v" path="res://antorcha.tscn" id="3_p7bnq"]
 [ext_resource type="Script" uid="uid://cg0mq7yg42bhc" path="res://disparador.gd" id="4_ar1si"]
 [ext_resource type="Script" uid="uid://cr76bsctimqjl" path="res://sistema_eventos.gd" id="5_6fba8"]
-[ext_resource type="Script" uid="uid://vare7cgkhumr" path="res://camara_zona_b.gd" id="6_yaehp"]
+[ext_resource type="Script" path="res://camara_fija.gd" id="6_yaehp"]
 [ext_resource type="Script" uid="uid://cchv43eug6720" path="res://personaje.gd" id="7_d1osm"]
 [ext_resource type="PackedScene" path="res://personaje/character-knight.glb" id="8_ie7uf"]
 [ext_resource type="Script" uid="uid://cil33ksiydo1g" path="res://caja_falsa.gd" id="9_3fa85"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" path="res://recolectable_corazon.tscn" id="18_corazon"]
 [ext_resource type="PackedScene" path="res://recolectable_arma.tscn" id="19_arma"]
 [ext_resource type="PackedScene" path="res://cofre.tscn" id="20_cofre"]
+[ext_resource type="Script" path="res://paredes_transparentes.gd" id="21_paredes"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_ie7uf"]
 panorama = ExtResource("1_6eo5x")
@@ -1138,6 +1139,11 @@ spring_length = 8.0
 margin = 0.3
 
 [node name="Camera3D" type="Camera3D" parent="PivoteCamara/SpringArm3D" unique_id=903305812]
+
+[node name="ParedesTransparentes" type="Node" parent="." node_paths=PackedStringArray("camara", "objetivo")]
+script = ExtResource("21_paredes")
+camara = NodePath("../PivoteCamara/SpringArm3D/Camera3D")
+objetivo = NodePath("../Personaje")
 
 [node name="Personaje" type="CharacterBody3D" parent="." unique_id=1465553144 node_paths=PackedStringArray("camara")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3.5)
