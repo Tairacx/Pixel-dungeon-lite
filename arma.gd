@@ -27,6 +27,8 @@ var _atacando := false
 var _t := 0.0
 var _duracion := 0.42
 var _momento := 0.2
+var _ataque: Node          # el nodo Espada (leemos el paso del combo)
+var _paso := 0             # 0 = tajo, 1 = vuelta, 2 = remate
 
 
 func _ready() -> void:
@@ -42,6 +44,7 @@ func _ready() -> void:
 	print("Arma: espada colgada de la mano en ", get_parent().name)
 	var ataque = get_parent().get_node_or_null("Espada")   # los enemigos no tienen este nodo
 	if ataque != null and ataque.has_signal("ataque_iniciado"):
+		_ataque = ataque
 		ataque.ataque_iniciado.connect(_on_ataque_iniciado)
 
 
@@ -50,6 +53,9 @@ func _on_ataque_iniciado(duracion: float, momento: float) -> void:
 	_t = 0.0
 	_duracion = duracion
 	_momento = momento
+	_paso = 0
+	if _ataque != null and "paso_actual" in _ataque:
+		_paso = int(_ataque.paso_actual)
 
 
 func _process(delta: float) -> void:
@@ -66,10 +72,21 @@ func _process(delta: float) -> void:
 	var reposo := _mano.global_transform * Transform3D(
 		Basis.from_euler(Vector3(deg_to_rad(rotacion_grados.x), deg_to_rad(rotacion_grados.y),
 		deg_to_rad(rotacion_grados.z))), posicion)
-	var tajo := _transform_tajo()
+	var tajo := _transform_paso()
 	var peso := minf(clampf(_t / entrada_salida, 0.0, 1.0),
 		clampf((_duracion - _t) / entrada_salida, 0.0, 1.0))
 	espada.global_transform = reposo.interpolate_with(tajo, peso)
+
+
+# Elige el movimiento según el paso del combo.
+func _transform_paso() -> Transform3D:
+	match _paso:
+		1:
+			return _transform_tajo_inverso()
+		2:
+			return _transform_remate()
+		_:
+			return _transform_tajo()
 
 
 # La espada en horizontal, con la hoja apuntando hacia donde barre: de la derecha del
@@ -89,6 +106,46 @@ func _transform_tajo() -> Transform3D:
 	var eje_x := eje_y.cross(eje_z)
 	var origen_mano: Vector3 = _mano.global_transform * posicion
 	return Transform3D(Basis(eje_x, eje_y, eje_z).scaled(Vector3.ONE * escala), origen_mano)
+
+
+# Paso 2 del combo: la vuelta, de la izquierda del héroe a su derecha.
+func _transform_tajo_inverso() -> Transform3D:
+	var pj3 := get_parent() as Node3D
+	var u := clampf((_t - (_momento - barrido_duracion * 0.5)) / barrido_duracion, 0.0, 1.0)
+	u = u * u * (3.0 - 2.0 * u)
+	var mitad := deg_to_rad(barrido_grados) * 0.5
+	var angulo := lerpf(mitad, -mitad, u)           # ahora empieza a la izquierda
+	var frente: Vector3 = -pj3.global_basis.z
+	frente.y = 0.0
+	var dir := frente.normalized().rotated(Vector3.UP, angulo)
+	var escala := _mano.global_basis.x.length()
+	var eje_y := dir
+	var eje_z := Vector3.UP
+	var eje_x := eje_y.cross(eje_z)
+	var origen_mano: Vector3 = _mano.global_transform * posicion
+	return Transform3D(Basis(eje_x, eje_y, eje_z).scaled(Vector3.ONE * escala), origen_mano)
+
+
+# Paso 3 del combo: el remate. La espada se levanta por encima de la cabeza y cae
+# con todo el peso al frente (plano de la hoja vertical, mirando al héroe de frente).
+func _transform_remate() -> Transform3D:
+	var pj3 := get_parent() as Node3D
+	var caida := barrido_duracion * 1.4
+	var u := clampf((_t - (_momento - caida)) / caida, 0.0, 1.0)
+	u = u * u * (3.0 - 2.0 * u)
+	var frente: Vector3 = -pj3.global_basis.z
+	frente.y = 0.0
+	frente = frente.normalized()
+	var derecha := frente.cross(Vector3.UP).normalized()
+	# Arranca apuntando arriba y atrás (+110°) y termina al frente y abajo (-35°).
+	var angulo := lerpf(deg_to_rad(110.0), deg_to_rad(-35.0), u)
+	var dir := (frente * cos(angulo) + Vector3.UP * sin(angulo)).normalized()
+	var escala := _mano.global_basis.x.length()
+	var origen: Vector3 = pj3.global_position + Vector3.UP * 1.7 + frente * 0.15
+	var eje_y := dir
+	var eje_z := derecha
+	var eje_x := eje_y.cross(eje_z)
+	return Transform3D(Basis(eje_x, eje_y, eje_z).scaled(Vector3.ONE * escala), origen)
 
 
 func _construir() -> Node3D:

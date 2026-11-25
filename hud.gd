@@ -2,7 +2,7 @@ extends CanvasLayer
 # HUD del juego: corazones del héroe, destello rojo al recibir daño y pantalla de derrota.
 # La interfaz se arma por código, así no depende de ajustes hechos a mano en el editor.
 
-const Corazones = preload("res://corazones_hud.gd")
+const BarraHeroe = preload("res://barra_heroe.gd")
 
 @export var salud: Node   # el nodo Salud del Personaje (si queda vacío se busca Personaje/Salud)
 
@@ -55,9 +55,9 @@ func _construir() -> void:
 	_destello.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_destello)
 
-	# Corazones arriba a la izquierda
-	_corazones = Corazones.new()
-	_corazones.position = Vector2(20, 18)
+	# Barra de vida del héroe (estilo pixel-dungeon con espada)
+	_corazones = BarraHeroe.new()
+	_corazones.position = Vector2(16, 14)
 	add_child(_corazones)
 
 	_construir_barra_jefe()
@@ -79,7 +79,7 @@ func _construir() -> void:
 
 	# Ayuda de controles abajo a la izquierda
 	var ayuda := Label.new()
-	ayuda.text = "WASD mover   ·   Clic derecho espada   ·   Esc suelta el mouse\nF11 o Alt+Enter: pantalla completa"
+	ayuda.text = "WASD mover   ·   Clic izquierdo: espada   ·   E abrir cofres\nEsc suelta el mouse"
 	_texto_legible(ayuda, 16)
 	ayuda.anchor_top = 1.0
 	ayuda.anchor_bottom = 1.0
@@ -211,23 +211,37 @@ func _construir_barra_jefe() -> void:
 	var borde := ColorRect.new()                   # marco oscuro
 	borde.color = Color("#1B1626")
 	borde.position = Vector2(0, 32)
-	borde.size = Vector2(ANCHO_BARRA, 24)
+	borde.size = Vector2(ANCHO_BARRA, 26)
 	borde.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caja_jefe.add_child(borde)
 
+	var bisel := ColorRect.new()                   # bisel interior
+	bisel.color = Color("#3F3552")
+	bisel.position = Vector2(1, 33)
+	bisel.size = Vector2(ANCHO_BARRA - 2, 24)
+	bisel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_caja_jefe.add_child(bisel)
+
 	var fondo := ColorRect.new()                   # vida perdida
-	fondo.color = Color("#3F3552")
+	fondo.color = Color("#0D0A12")
 	fondo.position = Vector2(3, 35)
-	fondo.size = Vector2(ANCHO_BARRA - 6, 18)
+	fondo.size = Vector2(ANCHO_BARRA - 6, 20)
 	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caja_jefe.add_child(fondo)
 
 	_relleno_jefe = ColorRect.new()                # vida que queda
 	_relleno_jefe.color = Color("#D63A3A")
 	_relleno_jefe.position = Vector2(3, 35)
-	_relleno_jefe.size = Vector2(ANCHO_BARRA - 6, 18)
+	_relleno_jefe.size = Vector2(ANCHO_BARRA - 6, 20)
 	_relleno_jefe.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caja_jefe.add_child(_relleno_jefe)
+
+	# --- Calavera pixel-art a la izquierda de la barra ---
+	var calavera := Control.new()
+	calavera.name = "Calavera"
+	calavera.set_script(preload("res://calavera_hud.gd"))
+	calavera.position = Vector2(-(ANCHO_BARRA + 40.0), 14)
+	_caja_jefe.add_child(calavera)
 
 	_texto_vida_jefe = Label.new()
 	_texto_vida_jefe.position = Vector2(0, 30)

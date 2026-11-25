@@ -27,19 +27,28 @@ func _ready() -> void:
 		p.name = "Slice_%02d" % i
 		add_child(p)
 		_voces.append(p)
-	call_deferred("_conectar")
 
 
-func _conectar() -> void:
+# El juego arranca en el menú (ahí no hay Personaje), así que la conexión con la
+# espada se reintenta hasta que aparece el héroe — y de nuevo si el nivel se reinicia.
+var _espada_conectada: Node = null
+
+
+func _process(_delta: float) -> void:
+	if _espada_conectada != null and is_instance_valid(_espada_conectada):
+		return
+	_espada_conectada = null
 	var arbol := get_tree()
 	if arbol == null or arbol.current_scene == null:
 		return
-	var pj := arbol.current_scene.get_node_or_null("Personaje")
+	var pj = arbol.current_scene.get_node_or_null("Personaje")
 	if pj == null:
 		return
 	var espada = pj.get_node_or_null("Espada")
-	if espada != null and espada.has_signal("ataque_iniciado"):
+	if espada != null and espada.has_signal("ataque_iniciado") \
+			and not espada.ataque_iniciado.is_connected(_on_ataque_iniciado):
 		espada.ataque_iniciado.connect(_on_ataque_iniciado)
+		_espada_conectada = espada
 
 
 func _on_ataque_iniciado(_duracion: float, _momento: float) -> void:

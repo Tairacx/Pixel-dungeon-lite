@@ -4,17 +4,20 @@ extends StaticBody3D
 # No se rompe a espadazos: se abre una sola vez y queda abierto.
 #
 # Recompensa (elegible en el Inspector):
-#   CORAZON   -> cura un corazón.
+#   CORAZON   -> cura uno o dos corazones.
 #   ATAQUE    -> sube el daño de la espada en "ataque_bonus".
-#   ALEATORIO -> elige al azar entre los dos (probabilidad_ataque).
+#   ARMA      -> suelta un arma para mejorar la espada.
+#   ALEATORIO -> elige al azar entre las tres anteriores, con estas probabilidades:
+#                probabilidad_arma, después probabilidad_ataque, el resto corazón.
 # Mientras el héroe está cerca aparece un aviso ("E" + "Abrir") encima del cofre.
 
-enum Recompensa { CORAZON, ATAQUE, ALEATORIO }
+enum Recompensa { CORAZON, ATAQUE, ALEATORIO, ARMA }
 
 @export var recompensa := Recompensa.CORAZON
 @export var corazones := 1.0              # corazones que regala (1.0 = un corazón)
 @export var ataque_bonus := 2             # daño extra si la recompensa es ATAQUE
-@export var probabilidad_ataque := 0.12   # chance de ATAQUE si recompensa == ALEATORIO
+@export var probabilidad_ataque := 0.10   # chance de ATAQUE si recompensa == ALEATORIO
+@export var probabilidad_arma := 0.05     # chance de ARMA si recompensa == ALEATORIO
 @export var radio_interaccion := 1.6      # m: a esta distancia aparece el aviso y se puede abrir
 @export var color_cuerpo := Color("#6B3E1F")
 @export var color_tapa := Color("#7A4A24")
@@ -25,6 +28,7 @@ enum Recompensa { CORAZON, ATAQUE, ALEATORIO }
 const MODELO_COFRE := preload("res://objetos/kenney/chest.glb")
 # Medidas reales del GLB; el ancho manda la escala (uniforme, sin deformar).
 const MEDIDAS_COFRE := Vector3(0.5, 0.45, 0.5)
+const ESCENA_ARMA := preload("res://recolectable_arma.tscn")
 
 var abierto := false
 var jugador_cerca := false
@@ -36,8 +40,17 @@ var _zona: Area3D
 
 
 func _ready() -> void:
+	add_to_group("detalles_camara")   # la cámara destapa la pared si el cofre queda tapado
 	if recompensa == Recompensa.ALEATORIO:
-		recompensa = Recompensa.ATAQUE if randf() < probabilidad_ataque else Recompensa.CORAZON
+		var r := randf()
+		if r < probabilidad_arma:
+			recompensa = Recompensa.ARMA
+		elif r < probabilidad_arma + probabilidad_ataque:
+			recompensa = Recompensa.ATAQUE
+		else:
+			recompensa = Recompensa.CORAZON
+	if recompensa == Recompensa.CORAZON and randf() < 0.25:
+		corazones = 2.0
 	var vista := get_node_or_null("VistaEditor")
 	if vista != null:
 		vista.visible = false
@@ -83,6 +96,8 @@ func _abrir() -> void:
 				return
 		Recompensa.ATAQUE:
 			_abrir_ataque(pj)
+		Recompensa.ARMA:
+			_abrir_arma(pj)
 	abierto = true
 	_actualizar_aviso()
 	_zona.set_deferred("monitoring", false)
@@ -109,6 +124,22 @@ func _abrir_ataque(pj: Node3D) -> void:
 		return
 	apuntar.subir_ataque(ataque_bonus)
 	_avisar_hud("+" + str(ataque_bonus) + " de ataque")
+
+
+func _abrir_arma(pj: Node3D) -> void:
+	# Si la espada ya está al máximo, el arma no serviría: damos ataque extra.
+	var apuntar := pj.get_node_or_null("Apuntar")
+	if apuntar != null and apuntar.has_method("al_maximo") and apuntar.al_maximo():
+		_abrir_ataque(pj)
+		return
+	var padre := get_parent()
+	if padre == null:
+		return
+	var arma := ESCENA_ARMA.instantiate()
+	padre.add_child(arma)
+	if arma is Node3D:
+		arma.global_position = global_position + Vector3.UP * 0.8
+	_avisar_hud("¡Arma encontrada!")
 
 
 func _animar_apertura() -> void:

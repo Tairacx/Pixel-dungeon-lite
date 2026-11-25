@@ -64,7 +64,7 @@ y un arma de ejemplo en la sala central.
 
 1. Abre `Level_1.tscn` y pulsa F5.
 2. En la sala central hay un corazón, un arma, una caja y un barril.
-3. Acércate a la caja y golpéala con clic derecho hasta romperla: saltan escombros y
+3. Acércate a la caja y golpéala con clic izquierdo hasta romperla: saltan escombros y
    aparecen un corazón y un arma.
 4. Recoge el arma: el HUD avisa `Espada mejorada` y la hoja cambia de brillo.
 5. Para probar la curación, deja que un esqueleto te quite vida y luego recoge un

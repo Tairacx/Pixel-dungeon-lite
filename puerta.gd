@@ -1,7 +1,8 @@
 extends StaticBody3D
 # Puerta de la mazmorra: bloquea un pasillo hasta que SistemaPuertas la abre.
 # Se arma sola por código (modelo 3D + colisión). Al abrirse se hunde en el suelo.
-# Puerta del jefe (es_jefe = true): joya roja al centro y remate dorado arriba.
+# Puerta común: puerta de madera con marco del pack "Modular Dungeon" de Kenney.
+# Puerta del jefe (es_jefe = true): reja de "Mini Dungeon" + joya roja y picos dorados.
 
 signal abierta
 signal bloqueada                    # el héroe se acercó y la puerta sigue cerrada
@@ -24,9 +25,14 @@ var _colision: CollisionShape3D
 const ORO := Color("#F2A33A")
 const ROJO := Color("#D63A3A")
 
-# Modelo Kenney "Mini Dungeon" (CC0): reja de 0.8 x 0.75 x 0.2 (plana, fina en Z).
-const MODELO_PUERTA := preload("res://objetos/kenney/gate.glb")
-const MEDIDAS_PUERTA := Vector3(0.8, 0.75, 0.2)
+# Puerta común: Kenney "Modular Dungeon" (CC0). El modelo trae marco + hoja:
+# el hueco de la hoja mide ~3.0 x 3.6 y el marco completo 4.4 x 4.4 x 1.4.
+const MODELO_PUERTA := preload("res://objetos/kenney/modular-dungeon/gate-door.glb")
+const MEDIDAS_PUERTA := Vector3(3.0, 3.596, 1.4)
+
+# Puerta del jefe: reja de Kenney "Mini Dungeon" (CC0), plana y fina en Z.
+const MODELO_JEFE := preload("res://objetos/kenney/gate.glb")
+const MEDIDAS_JEFE := Vector3(0.8, 0.75, 0.2)
 
 
 func _ready() -> void:
@@ -48,11 +54,15 @@ func _construir() -> void:
 	_hoja.name = "Hoja"
 	add_child(_hoja)
 
-	# La reja del pack se estira para llenar el hueco de la puerta.
-	var modelo := MODELO_PUERTA.instantiate() as Node3D
+	# La puerta común trae su propio marco; la del jefe es la reja.
+	var modelo_escena: PackedScene = MODELO_JEFE if es_jefe else MODELO_PUERTA
+	var medidas := MEDIDAS_JEFE if es_jefe else MEDIDAS_PUERTA
+	var modelo := modelo_escena.instantiate() as Node3D
 	modelo.name = "Modelo"
-	modelo.scale = Vector3(ancho / MEDIDAS_PUERTA.x, alto / MEDIDAS_PUERTA.y,
-		grosor / MEDIDAS_PUERTA.z)
+	var escala := Vector3(ancho / medidas.x, alto / medidas.y, grosor / medidas.z)
+	if not es_jefe:
+		escala.z = 0.57   # el marco de la puerta común tiene profundidad propia
+	modelo.scale = escala
 	_hoja.add_child(modelo)
 
 	if es_jefe:

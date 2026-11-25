@@ -1,0 +1,41 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://esqueleto_guerrero.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://esqueletos/Skeleton_Warrior.glb" id="2_modelo"]
+[ext_resource type="Script" path="res://rig_esqueleto.gd" id="3_rig"]
+[ext_resource type="Script" path="res://dano_contacto.gd" id="4_garra"]
+
+[sub_resource type="CapsuleShape3D" id="Capsula"]
+radius = 0.3
+height = 1.3
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_garra"]
+radius = 0.7
+
+[node name="EsqueletoGuerrero" type="CharacterBody3D"]
+script = ExtResource("1_script")
+vida_maxima = 4
+rapidez = 1.2
+radio_ver = 8.0
+radio_perder = 11.0
+aturdimiento = 0.5
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("Capsula")
+
+[node name="Modelo" parent="." instance=ExtResource("2_modelo")]
+transform = Transform3D(-0.9, 0, 0, 0, 0.9, 0, 0, 0, -0.9, 0, 0, 0)
+
+[node name="RigEsqueleto" type="Node" parent="."]
+script = ExtResource("3_rig")
+
+[node name="Garra" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.95, 0)
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("4_garra")
+danio = 1.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Garra"]
+shape = SubResource("SphereShape3D_garra")

@@ -1,15 +1,14 @@
 [gd_scene format=3 uid="uid://6tj16b2igek3"]
 
-[ext_resource type="Texture2D" uid="uid://dk6qt0426pkck" path="res://WhatsApp Image 2026-11-13 at 8.22.21 PM.jpeg" id="1_6eo5x"]
+[ext_resource type="Texture2D" path="res://cielo_noche.png" id="1_6eo5x"]
 [ext_resource type="Material" uid="uid://dddsw3hdrnuv3" path="res://PISO.tres" id="1_ar1si"]
-[ext_resource type="Texture2D" uid="uid://c8ephdpwsi6e3" path="res://muro_ladrillo.png" id="2_4s4xf"]
+[ext_resource type="Texture2D" path="res://pared_piedra.png" id="2_4s4xf"]
 [ext_resource type="PackedScene" uid="uid://dkagsaxuv285v" path="res://antorcha.tscn" id="3_p7bnq"]
 [ext_resource type="Script" uid="uid://cg0mq7yg42bhc" path="res://disparador.gd" id="4_ar1si"]
 [ext_resource type="Script" uid="uid://cr76bsctimqjl" path="res://sistema_eventos.gd" id="5_6fba8"]
 [ext_resource type="Script" uid="uid://b6kxw6n1g3f" path="res://camara_fija.gd" id="6_yaehp"]
 [ext_resource type="Script" uid="uid://kxrglvc17otl" path="res://personaje.gd" id="7_d1osm"]
 [ext_resource type="PackedScene" uid="uid://cqwyh4esobrfl" path="res://personaje/character-knight.glb" id="8_ie7uf"]
-[ext_resource type="Script" uid="uid://cil33ksiydo1g" path="res://caja_falsa.gd" id="9_3fa85"]
 [ext_resource type="Script" uid="uid://d01vfi5scvug" path="res://espada.gd" id="9_gwx4l"]
 [ext_resource type="Script" uid="uid://ceayvg2ffnxao" path="res://apuntar.gd" id="10_fkbji"]
 [ext_resource type="PackedScene" uid="uid://8j4a0xt0tjg7" path="res://sala_jefe.tscn" id="11_jefe"]
@@ -17,10 +16,11 @@
 [ext_resource type="Script" uid="uid://cwi7ed75uep" path="res://hud.gd" id="13_hud"]
 [ext_resource type="Script" uid="uid://bjrflnjjmk0xx" path="res://arma.gd" id="14_arma"]
 [ext_resource type="PackedScene" path="res://esqueleto_pequeno.tscn" id="15_esq"]
+[ext_resource type="PackedScene" path="res://esqueleto_picaro.tscn" id="23_picaro"]
+[ext_resource type="PackedScene" path="res://esqueleto_mago.tscn" id="24_mago"]
+[ext_resource type="PackedScene" path="res://esqueleto_guerrero.tscn" id="25_guerrero"]
 [ext_resource type="PackedScene" uid="uid://daiidpetxikjp" path="res://caja_recursos.tscn" id="16_caja"]
 [ext_resource type="PackedScene" path="res://barril.tscn" id="17_barril"]
-[ext_resource type="PackedScene" path="res://recolectable_corazon.tscn" id="18_corazon"]
-[ext_resource type="PackedScene" path="res://recolectable_arma.tscn" id="19_arma"]
 [ext_resource type="PackedScene" path="res://cofre.tscn" id="20_cofre"]
 [ext_resource type="Script" uid="uid://bfna86855gxwp" path="res://paredes_transparentes.gd" id="21_paredes"]
 [ext_resource type="Script" uid="uid://cfh4vogy5jw5h" path="res://puerta.gd" id="21_puerta"]
@@ -34,7 +34,7 @@ sky_material = SubResource("PanoramaSkyMaterial_ie7uf")
 
 [sub_resource type="Environment" id="Entorno"]
 background_mode = 2
-background_color = Color(0.106, 0.086, 0.149, 1)
+background_color = Color(0.023, 0.016, 0.039, 1)
 sky = SubResource("Sky_d1osm")
 ambient_light_source = 2
 ambient_light_color = Color(0.77254903, 0.36862746, 0.22745098, 1)
@@ -52,8 +52,9 @@ size = Vector3(5, 3.4506836, 0.5)
 
 [sub_resource type="StandardMaterial3D" id="MuroMat"]
 albedo_texture = ExtResource("2_4s4xf")
+albedo_color = Color(0.88, 0.85, 1, 1)
 roughness = 0.9
-uv1_scale = Vector3(0.5, 0.5, 0.5)
+uv1_scale = Vector3(0.33333, 0.33333, 0.33333)
 uv1_triplanar = true
 uv1_world_triplanar = true
 texture_filter = 0
@@ -240,35 +241,15 @@ semilla = 31
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
 semilla = 53
 
-[node name="CorazonInicial" parent="Mazmorra/SalaCentral" unique_id=231841738 instance=ExtResource("18_corazon")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.000041, 0.55, -4.8617544)
-
-[node name="ArmaInicial" parent="Mazmorra/SalaCentral" unique_id=878116361 instance=ExtResource("19_arma")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.023543, 0.55, -4.859721)
-
 [node name="Cajas" type="Node3D" parent="Mazmorra/SalaCentral" unique_id=1861007808]
 
-[node name="CajaRecursosCentral" parent="Mazmorra/SalaCentral/Cajas" unique_id=942782389 instance=ExtResource("16_caja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3957505, 0, 4.490182)
-
 [node name="BarrilCentral" parent="Mazmorra/SalaCentral/Cajas" unique_id=1338225754 instance=ExtResource("17_barril")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.259426, 0, 4.0082197)
-armas_al_romper = 1
-
-[node name="Caja falsa" parent="Mazmorra/SalaCentral/Cajas" unique_id=1009967771 instance=ExtResource("16_caja")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4444275, 0, 2.945076)
-script = ExtResource("9_3fa85")
-color_cuerpo = Color(0.54509807, 0.3529412, 0.16862746, 1)
-color_detalle = Color(0.7882353, 0.63529414, 0.15294118, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.06496, -0.014823437, 4.8570585)
 
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaCentral" unique_id=96121164]
 
 [node name="CofreCentral" parent="Mazmorra/SalaCentral/Cofres" unique_id=1878239023 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, -5)
-recompensa = 2
-
-[node name="CofreEste" parent="Mazmorra/SalaCentral/Cofres" unique_id=54855515 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, 5)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, -5)
 recompensa = 2
 
 [node name="EsqueletoCentral1" parent="Mazmorra/SalaCentral" unique_id=1654359149 instance=ExtResource("15_esq")]
@@ -365,7 +346,7 @@ semilla = 113
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
 semilla = 127
 
-[node name="EsqueletoNorte1" parent="Mazmorra/SalaNorte" unique_id=983153296 instance=ExtResource("15_esq")]
+[node name="EsqueletoGuerrero" parent="Mazmorra/SalaNorte" unique_id=983153296 instance=ExtResource("25_guerrero")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
 
 [node name="EsqueletoNorte2" parent="Mazmorra/SalaNorte" unique_id=1024006178 instance=ExtResource("15_esq")]
@@ -374,12 +355,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaNorte" unique_id=258076978]
 
 [node name="CofreNorte1" parent="Mazmorra/SalaNorte/Cofres" unique_id=1035694056 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, -5)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, -5)
 recompensa = 2
 
-[node name="CofreNorte2" parent="Mazmorra/SalaNorte/Cofres" unique_id=239942478 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5, 0, 5)
-recompensa = 2
+[node name="BarrilNorte" parent="Mazmorra/SalaNorte" unique_id=1908676887 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, 5)
 
 [node name="SalaSur" type="Node3D" parent="Mazmorra" unique_id=2027270247]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 20)
@@ -472,21 +452,16 @@ semilla = 239
 [node name="EsqueletoSur1" parent="Mazmorra/SalaSur" unique_id=1865754240 instance=ExtResource("15_esq")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
 
-[node name="EsqueletoSur2" parent="Mazmorra/SalaSur" unique_id=1923546629 instance=ExtResource("15_esq")]
+[node name="EsqueletoPicaro" parent="Mazmorra/SalaSur" unique_id=1923546629 instance=ExtResource("23_picaro")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0.05, 3)
 
 [node name="BarrilSur" parent="Mazmorra/SalaSur" unique_id=34920969 instance=ExtResource("17_barril")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.744521, 0, 4.9936867)
-armas_al_romper = 1
 
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaSur" unique_id=555610863]
 
-[node name="CofreSur1" parent="Mazmorra/SalaSur/Cofres" unique_id=114207993 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, 5)
-recompensa = 2
-
 [node name="CofreSur2" parent="Mazmorra/SalaSur/Cofres" unique_id=1241399575 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5, 0, -5)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 0, -5)
 recompensa = 2
 
 [node name="SalaOeste" type="Node3D" parent="Mazmorra" unique_id=882014369]
@@ -578,7 +553,7 @@ semilla = 311
 transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, -5, 1, 6)
 semilla = 317
 
-[node name="EsqueletoOeste1" parent="Mazmorra/SalaOeste" unique_id=1544122439 instance=ExtResource("15_esq")]
+[node name="EsqueletoMago" parent="Mazmorra/SalaOeste" unique_id=1544122439 instance=ExtResource("24_mago")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0.05, -3)
 
 [node name="EsqueletoOeste2" parent="Mazmorra/SalaOeste" unique_id=1754396069 instance=ExtResource("15_esq")]
@@ -593,12 +568,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.8096485, 0, -4.7525764)
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaOeste" unique_id=821129229]
 
 [node name="CofreOeste1" parent="Mazmorra/SalaOeste/Cofres" unique_id=454536000 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5, 0, 5)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 0, 5)
 recompensa = 2
 
-[node name="CofreOeste2" parent="Mazmorra/SalaOeste/Cofres" unique_id=2095584468 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, -5)
-recompensa = 2
+[node name="BarrilOeste" parent="Mazmorra/SalaOeste" unique_id=1110162486 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -5)
 
 [node name="SalaEste" type="Node3D" parent="Mazmorra" unique_id=698943275]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 0)
@@ -710,16 +684,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.199436, 0, 4.916665)
 
 [node name="BarrilEste" parent="Mazmorra/SalaEste" unique_id=2116868124 instance=ExtResource("17_barril")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5720367, 0, -4.890465)
-armas_al_romper = 1
 
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaEste" unique_id=81666965]
 
 [node name="CofreEste1" parent="Mazmorra/SalaEste/Cofres" unique_id=544441103 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, 5)
-recompensa = 2
-
-[node name="CofreEste2" parent="Mazmorra/SalaEste/Cofres" unique_id=318028432 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 5, 0, -5)
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, 5, 0, 5)
 recompensa = 2
 
 [node name="SalaExtremaEste" type="Node3D" parent="Mazmorra" unique_id=1989875287]
@@ -833,12 +802,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.095745, 0, -2.7229125)
 [node name="Cofres" type="Node3D" parent="Mazmorra/SalaExtremaEste" unique_id=1611702333]
 
 [node name="CofreExtremaEste1" parent="Mazmorra/SalaExtremaEste/Cofres" unique_id=17512730 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5, 0, 5)
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, -5, 0, 5)
 recompensa = 2
 
-[node name="CofreExtremaEste2" parent="Mazmorra/SalaExtremaEste/Cofres" unique_id=550456326 instance=ExtResource("20_cofre")]
-transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -5, 0, -5)
-recompensa = 2
+[node name="BarrilExtremaEste" parent="Mazmorra/SalaExtremaEste" unique_id=1578376799 instance=ExtResource("17_barril")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 0, -5)
 
 [node name="Pasillos" type="Node3D" parent="Mazmorra" unique_id=992361665]
 
@@ -1136,14 +1104,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5986443, 0.20000002, 3.2326
 [node name="BarrilJefe1" parent="Mazmorra/SalaJefe" unique_id=376032792 instance=ExtResource("17_barril")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, -7)
 
-[node name="BarrilJefe2" parent="Mazmorra/SalaJefe" unique_id=176454223 instance=ExtResource("17_barril")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, -7)
-
-[node name="BarrilJefe3" parent="Mazmorra/SalaJefe" unique_id=1418965434 instance=ExtResource("17_barril")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 0, 7)
-
-[node name="BarrilJefe4" parent="Mazmorra/SalaJefe" unique_id=1130128516 instance=ExtResource("17_barril")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7, 0, 7)
+[node name="CofreJefe" parent="Mazmorra/SalaJefe" unique_id=1698352587 instance=ExtResource("20_cofre")]
+transform = Transform3D(-1, 0, 0, 0, 1, 0, 0, 0, -1, 7, 0, 7)
+recompensa = 2
 
 [node name="Puertas" type="Node3D" parent="Mazmorra" unique_id=345677026]
 
