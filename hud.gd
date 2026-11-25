@@ -16,10 +16,8 @@ var _tween_aviso: Tween
 const ANCHO_BARRA := 320.0
 const DISTANCIA_VER_JEFE := 20.0   # m: la barra aparece cuando el héroe se acerca a esta distancia
 var _jefe: CharacterBody3D
+var _barra_jefe: Control
 var _caja_jefe: Control
-var _relleno_jefe: ColorRect
-var _texto_vida_jefe: Label
-var _nombre_jefe: Label
 var _jefe_muerto := false
 var _jefe_golpeado := false
 
@@ -61,7 +59,6 @@ func _construir() -> void:
 	add_child(_corazones)
 
 	_construir_barra_jefe()
-
 	# Aviso breve de lo que se recogió (ej.: "+1 corazón de vida")
 	_aviso = Label.new()
 	_aviso.anchor_left = 0.5
@@ -79,7 +76,7 @@ func _construir() -> void:
 
 	# Ayuda de controles abajo a la izquierda
 	var ayuda := Label.new()
-	ayuda.text = "WASD mover   ·   Clic izquierdo: espada   ·   E abrir cofres\nEsc suelta el mouse"
+	ayuda.text = "WASD mover   ·   SHIFT correr   ·   Clic izquierdo: espada\nE abrir cofres   ·   Esc suelta el mouse"
 	_texto_legible(ayuda, 16)
 	ayuda.anchor_top = 1.0
 	ayuda.anchor_bottom = 1.0
@@ -194,62 +191,26 @@ func _construir_barra_jefe() -> void:
 	_caja_jefe.anchor_right = 1.0
 	_caja_jefe.offset_left = -(ANCHO_BARRA + 24.0)
 	_caja_jefe.offset_right = -24.0
-	_caja_jefe.offset_top = 18.0
-	_caja_jefe.offset_bottom = 78.0
+	_caja_jefe.offset_top = 14.0
+	_caja_jefe.offset_bottom = 70.0
 	_caja_jefe.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_caja_jefe.visible = false
 	add_child(_caja_jefe)
 
-	_nombre_jefe = Label.new()
-	_nombre_jefe.text = "REY ESQUELETO"
-	_nombre_jefe.position = Vector2(0, 0)
-	_nombre_jefe.size = Vector2(ANCHO_BARRA, 28)
-	_nombre_jefe.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
-	_texto_legible(_nombre_jefe, 22)
-	_caja_jefe.add_child(_nombre_jefe)
+	# Título del jefe
+	var nombre := Label.new()
+	nombre.text = "REY ESQUELETO"
+	nombre.position = Vector2(0, 0)
+	nombre.size = Vector2(ANCHO_BARRA, 24)
+	nombre.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_texto_legible(nombre, 20)
+	_caja_jefe.add_child(nombre)
 
-	var borde := ColorRect.new()                   # marco oscuro
-	borde.color = Color("#1B1626")
-	borde.position = Vector2(0, 32)
-	borde.size = Vector2(ANCHO_BARRA, 26)
-	borde.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_caja_jefe.add_child(borde)
-
-	var bisel := ColorRect.new()                   # bisel interior
-	bisel.color = Color("#3F3552")
-	bisel.position = Vector2(1, 33)
-	bisel.size = Vector2(ANCHO_BARRA - 2, 24)
-	bisel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_caja_jefe.add_child(bisel)
-
-	var fondo := ColorRect.new()                   # vida perdida
-	fondo.color = Color("#0D0A12")
-	fondo.position = Vector2(3, 35)
-	fondo.size = Vector2(ANCHO_BARRA - 6, 20)
-	fondo.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_caja_jefe.add_child(fondo)
-
-	_relleno_jefe = ColorRect.new()                # vida que queda
-	_relleno_jefe.color = Color("#D63A3A")
-	_relleno_jefe.position = Vector2(3, 35)
-	_relleno_jefe.size = Vector2(ANCHO_BARRA - 6, 20)
-	_relleno_jefe.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_caja_jefe.add_child(_relleno_jefe)
-
-	# --- Calavera pixel-art a la izquierda de la barra ---
-	var calavera := Control.new()
-	calavera.name = "Calavera"
-	calavera.set_script(preload("res://calavera_hud.gd"))
-	calavera.position = Vector2(-(ANCHO_BARRA + 40.0), 14)
-	_caja_jefe.add_child(calavera)
-
-	_texto_vida_jefe = Label.new()
-	_texto_vida_jefe.position = Vector2(0, 30)
-	_texto_vida_jefe.size = Vector2(ANCHO_BARRA, 26)
-	_texto_vida_jefe.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_texto_vida_jefe.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_texto_legible(_texto_vida_jefe, 14)
-	_caja_jefe.add_child(_texto_vida_jefe)
+	# Barra pixel-art con calavera y picos dorados
+	var BarraJefe = preload("res://barra_jefe.gd")
+	_barra_jefe = BarraJefe.new()
+	_barra_jefe.position = Vector2(-(ANCHO_BARRA - 60.0), 24)
+	_caja_jefe.add_child(_barra_jefe)
 
 
 func _buscar_jefe() -> void:
@@ -267,20 +228,18 @@ func _on_jefe_vida(vida: int, maxima: int) -> void:
 	_actualizar_barra_jefe(vida, maxima, true)
 
 
-func _actualizar_barra_jefe(vida: int, maxima: int, animar: bool) -> void:
-	var ancho := (ANCHO_BARRA - 6.0) * float(vida) / float(maxi(maxima, 1))
-	if animar:
-		create_tween().tween_property(_relleno_jefe, "size:x", ancho, 0.2)
-	else:
-		_relleno_jefe.size.x = ancho
-	_texto_vida_jefe.text = str(vida) + " / " + str(maxima)
+func _actualizar_barra_jefe(vida: int, maxima: int, _animar: bool) -> void:
+	if _barra_jefe != null:
+		_barra_jefe.vida = float(vida)
+		_barra_jefe.maxima = maxi(maxima, 1)
 
 
 func _on_jefe_murio() -> void:
 	_jefe_muerto = true
 	_caja_jefe.visible = true
-	_nombre_jefe.text = "REY ESQUELETO DERROTADO"
-	_actualizar_barra_jefe(0, _jefe.vida_maxima, true)
+	if _barra_jefe != null:
+		_barra_jefe.vida = 0.0
+		_barra_jefe.derrotado = true
 	var t := create_tween()
 	t.tween_interval(2.0)
 	t.tween_property(_caja_jefe, "modulate:a", 0.0, 1.0)
