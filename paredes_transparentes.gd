@@ -124,6 +124,8 @@ func _animar(delta: float) -> void:
 		if not _fades.has(malla):
 			malla.material_override = _mat
 			malla.set_instance_shader_parameter("fade", 1.0)
+			if malla.material_overlay is ShaderMaterial:
+				malla.material_overlay.set_shader_parameter("fade", 1.0)
 			_fades[malla] = 1.0
 	for malla in _fades.keys():
 		var target: float = fade_min if _tapan.has(malla) else 1.0
@@ -131,6 +133,13 @@ func _animar(delta: float) -> void:
 		f = lerpf(f, target, 1.0 - exp(-velocidad * delta))
 		_fades[malla] = f
 		malla.set_instance_shader_parameter("fade", f)
+		# El musgo (material_overlay) lleva su propio ShaderMaterial con `fade`
+		# como uniform normal: se lo avisamos acá, sin que nadie recorra los
+		# muros por cuadro.
+		if malla.material_overlay is ShaderMaterial:
+			malla.material_overlay.set_shader_parameter("fade", f)
 		if target >= 1.0 and f >= 0.995:
 			malla.material_override = null
+			if malla.material_overlay is ShaderMaterial:
+				malla.material_overlay.set_shader_parameter("fade", 1.0)
 			_fades.erase(malla)

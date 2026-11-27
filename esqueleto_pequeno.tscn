@@ -18,6 +18,10 @@ vida_maxima = 2
 rapidez = 1.7
 radio_ver = 6.0
 radio_perder = 9.0
+tiempo_ataque = 1.4
+rapidez_rodeo = 0.8
+reaccion_min = 0.25
+reaccion_max = 0.5
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)

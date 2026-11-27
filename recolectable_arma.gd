@@ -36,6 +36,7 @@ func _aplicar(pj: Node3D) -> String:
 	var apuntar := pj.get_node_or_null("Apuntar")
 	if apuntar == null or not apuntar.has_method("mejorar"):
 		return ""
+	var antes: int = apuntar.mejoras
 	if not apuntar.mejorar(mejoras):
 		return ""
-	return "Espada mejorada · daño " + str(apuntar.danio)
+	return "Espada +" + str(apuntar.mejoras - antes)

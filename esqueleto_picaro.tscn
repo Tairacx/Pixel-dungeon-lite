@@ -19,6 +19,9 @@ rapidez = 2.4
 radio_ver = 7.0
 radio_perder = 10.0
 aturdimiento = 0.35
+tiempo_ataque = 1.5
+angulo_flanqueo = 55.0
+retirada_fallida = 0.6
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)

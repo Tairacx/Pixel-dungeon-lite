@@ -4,21 +4,36 @@ extends "res://esqueleto_pequeno.gd"
 # Habilidad OCASIONAL: GOLPE SÍSMICO. Si el héroe está cerca, se detiene medio
 # segundo con un anillo rojo creciendo en el piso (aviso para escapar) y después
 # golpea la suelo: 1 corazón a todo lo que quede dentro del anillo.
-# No lo usa siempre: tira los dados cada "cooldown_sismo" segundos.
+# No lo usa siempre: tira los dados cada "cooldown_sismo" segundos y nunca dos
+# veces seguidas. Mientras se planta, su armadura aguanta el primer golpe.
+# Después de golpear el suelo da un paso atrás.
 
+@export_group("Sismo")
 @export_range(0.0, 1.0, 0.05) var probabilidad_sismo := 0.45
 @export var cooldown_sismo := 8.0          # s entre intentos
 @export var radio_sismo := 2.3             # m del área del golpe
 @export var aviso_sismo := 0.5             # s de aviso antes de golpear
 @export var danio_sismo := 1.0             # corazones del golpe sísmico
+@export var paso_atras := 0.3              # s que retrocede tras el sismo
+@export var bloqueo_plantado := true       # aguanta un golpe mientras carga
 
 var _t_sismo := 3.0
 var _cargando := 0.0
 var _anillo: MeshInstance3D
 var _luz_aviso: OmniLight3D
+var _plantado := 0.0        # > 0 mientras está plantado (aguanta un golpe)
+var _bloqueo_usado := false
+var _sismo_previo := false  # para no repetir el sismo dos veces seguidas
+var _t_paso := 0.0
 
 
 func _physics_process(delta: float) -> void:
+	if _plantado > 0.0:
+		_plantado = maxf(_plantado - delta, 0.0)
+	if _t_paso > 0.0:                     # paso atrás después del sismo
+		_t_paso = maxf(_t_paso - delta, 0.0)
+		retroceder(delta, 0.55)
+		return
 	if _cargando > 0.0:
 		_cargando -= delta
 		velocity.x = 0.0
@@ -36,14 +51,31 @@ func _physics_process(delta: float) -> void:
 	if _t_sismo > 0.0:
 		return
 	_t_sismo = cooldown_sismo
+	if _sismo_previo:                     # no repite dos veces seguidas
+		_sismo_previo = false
+		return
 	if randf() > probabilidad_sismo:
 		return   # esta vez no: sigue pegando de manera normal
 	if global_position.distance_to(objetivo.global_position) <= radio_sismo + 0.7:
 		_cargar_sismo()
 
 
+# Aguanta el primer golpe mientras se planta (armadura del tanque).
+func recibir_golpe(danio: int) -> void:
+	if _muerto:
+		return
+	if bloqueo_plantado and _plantado > 0.0 and not _bloqueo_usado:
+		_bloqueo_usado = true
+		_parpadear()      # el "clang" del escudo: se sacude pero no pierde vida
+		return
+	super(danio)
+
+
 func _cargar_sismo() -> void:
 	_cargando = aviso_sismo
+	_sismo_previo = true
+	_plantado = aviso_sismo + 0.6
+	_bloqueo_usado = false
 	aturdir(aviso_sismo + 0.05)   # quieto mientras carga
 	if _anillo == null:
 		_anillo = MeshInstance3D.new()
@@ -78,6 +110,7 @@ func _cargar_sismo() -> void:
 
 func _golpear_suelo() -> void:
 	aturdido = 0.0   # la carga ya cumplió su función: que no se congele tras el sísmico
+	_plantado = 0.0
 	if _anillo != null:
 		_anillo.visible = false
 	if _luz_aviso != null:
@@ -87,6 +120,7 @@ func _golpear_suelo() -> void:
 		var salud = objetivo.get_node_or_null("Salud")
 		if salud != null:
 			salud.recibir_danio(danio_sismo, global_position)
+	_t_paso = paso_atras      # se reacomoda: nunca queda pegado al héroe
 
 
 func _morir() -> void:

@@ -2,6 +2,9 @@ extends Node
 # El daño de la espada: lanza un rayo corto hacia adelante, pero SOLO cuando la espada
 # baja (Espada.golpe, en el momento justo de la animación). Un clic = un golpe.
 
+# Avisa al HUD que la espada cambió (nivel y daño) para que actualice su indicador.
+signal mejorada(nivel: int, danio: int)
+
 @export var alcance = 1.6
 @export_enum("Personaje", "Centro de la cámara", "Mouse") var desde = 0
 @export var danio = 1
@@ -41,6 +44,7 @@ func mejorar(cantidad := 1) -> bool:
 		arma.aplicar_mejora(mejoras)
 	print("Arma mejorada al nivel ", mejoras, " · daño ", danio, " · alcance ",
 		snappedf(alcance, 0.01), " m")
+	mejorada.emit(mejoras, danio)
 	return true
 
 
@@ -53,6 +57,7 @@ func al_maximo() -> bool:
 func subir_ataque(cantidad: int) -> int:
 	danio += cantidad
 	print("Ataque +", cantidad, " · daño ", danio)
+	mejorada.emit(mejoras, danio)
 	return danio
 
 

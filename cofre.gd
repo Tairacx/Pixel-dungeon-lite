@@ -34,8 +34,7 @@ var abierto := false
 var jugador_cerca := false
 
 var _modelo: Node3D
-var _aviso_e: Label3D
-var _aviso_texto: Label3D
+var _aviso: Label3D
 var _zona: Area3D
 
 
@@ -81,9 +80,7 @@ func _on_cuerpo_sale(cuerpo: Node3D) -> void:
 
 
 func _actualizar_aviso() -> void:
-	var mostrar := jugador_cerca and not abierto
-	_aviso_e.visible = mostrar
-	_aviso_texto.visible = mostrar
+	_aviso.visible = jugador_cerca and not abierto
 
 
 func _abrir() -> void:
@@ -109,21 +106,21 @@ func _abrir_corazon(pj: Node3D) -> bool:
 	if salud == null:
 		return false
 	if salud.vida >= float(salud.maxima):
-		_avisar_hud("La vida ya está llena")
+		_avisar_hud("Vida completa")
 		return false
 	var sano: float = salud.curar(corazones)
 	if sano > 0.0:
-		_avisar_hud("+" + str(snappedf(sano, 0.5)) + " de vida")
+		_avisar_hud(_texto_vida(sano))
 	return true
 
 
 func _abrir_ataque(pj: Node3D) -> void:
 	var apuntar := pj.get_node_or_null("Apuntar")
 	if apuntar == null or not apuntar.has_method("subir_ataque"):
-		_avisar_hud("No hay espada que mejorar")
+		_avisar_hud("Sin espada")
 		return
 	apuntar.subir_ataque(ataque_bonus)
-	_avisar_hud("+" + str(ataque_bonus) + " de ataque")
+	_avisar_hud("Daño +" + str(ataque_bonus))
 
 
 func _abrir_arma(pj: Node3D) -> void:
@@ -139,7 +136,17 @@ func _abrir_arma(pj: Node3D) -> void:
 	padre.add_child(arma)
 	if arma is Node3D:
 		arma.global_position = global_position + Vector3.UP * 0.8
-	_avisar_hud("¡Arma encontrada!")
+	_avisar_hud("Arma nueva")
+
+
+# Texto corto del premio de vida: "+1 corazón", "+½ corazón", "+2 corazones".
+func _texto_vida(cantidad: float) -> String:
+	if is_equal_approx(cantidad, 0.5):
+		return "+½ corazón"
+	var n := snappedf(cantidad, 0.5)
+	if is_equal_approx(n, 1.0):
+		return "+1 corazón"
+	return "+" + str(n) + " corazones"
 
 
 func _animar_apertura() -> void:
@@ -204,10 +211,9 @@ func _asegurar_zona() -> void:
 
 
 func _crear_avisos() -> void:
-	# El modelo 3D es más alto que tamano.y: los avisos despegan del techo visible.
+	# Un solo renglón en el mundo: "[E] Abrir". Nada de dos etiquetas ni frases largas.
 	var alto := maxf(tamano.y, MEDIDAS_COFRE.y * (tamano.x / MEDIDAS_COFRE.x))
-	_aviso_e = _label("E", 64, Color(1.0, 0.85, 0.3), Vector3(0, alto + 0.55, 0))
-	_aviso_texto = _label("Abrir", 32, Color(1.0, 0.96, 0.85), Vector3(0, alto + 0.18, 0))
+	_aviso = _label("[E] Abrir", 40, Color(1.0, 0.9, 0.5), Vector3(0, alto + 0.42, 0))
 
 
 func _label(texto: String, tam_fuente: int, color: Color, pos: Vector3) -> Label3D:

@@ -52,9 +52,10 @@ func _aplicar(pj: Node3D) -> String:
 	var sano: float = salud.curar(corazones)
 	if sano <= 0.0:
 		return ""
-	return "+" + _texto_corazones(sano) + " de vida"
+	return "+" + _texto_corazones(sano)
 
 
+# Texto corto: "+1 corazón", "+½ corazón", "+2 corazones" (el ♥ no está en la fuente).
 static func _texto_corazones(cantidad: float) -> String:
 	if is_equal_approx(cantidad, 0.5):
 		return "½ corazón"

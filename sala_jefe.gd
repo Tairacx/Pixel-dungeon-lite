@@ -84,8 +84,16 @@ func _physics_process(_delta: float) -> void:
 	_antes = ahora
 
 
+# Los ataques de área solo lastiman dentro de la sala (radio claro): si el héroe
+# se quedó del otro lado de la puerta, la animación sigue pero no le llega el golpe.
+func _dentro_de_la_sala() -> bool:
+	return personaje != null and zona.overlaps_body(personaje)
+
+
 # El aviso del barrido es una franja (BoxMesh) en el piso.
 func _golpe_barrido() -> void:
+	if not _dentro_de_la_sala():
+		return
 	var tam: Vector3 = (aviso_barrido.mesh as BoxMesh).size
 	var p := to_local(personaje.global_position) - aviso_barrido.position
 	if absf(p.x) <= tam.x * 0.5 + RADIO_JUGADOR and absf(p.z) <= tam.z * 0.5 + RADIO_JUGADOR:
@@ -94,6 +102,8 @@ func _golpe_barrido() -> void:
 
 # El aviso del estallido es un círculo (CylinderMesh) en el piso.
 func _golpe_estallido() -> void:
+	if not _dentro_de_la_sala():
+		return
 	var radio: float = (aviso_estallido.mesh as CylinderMesh).top_radius
 	var p := to_local(personaje.global_position) - aviso_estallido.position
 	if Vector2(p.x, p.z).length() <= radio + RADIO_JUGADOR:

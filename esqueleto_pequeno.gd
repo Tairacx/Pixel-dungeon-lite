@@ -1,7 +1,8 @@
 extends "res://perseguidor.gd"
 # Esqueleto pequeño: enemigo común de las salas.
 # Patrulla alrededor del punto donde lo pongas, persigue al héroe si lo ve y muere en pocos golpes.
-# Hereda de perseguidor.gd (patrulla y persecución); aquí solo se agrega la vida.
+# Hereda de perseguidor.gd (patrulla, rodeo y persecución); aquí se agrega la vida y
+# su sello propio: se acerca en zigzag y hace una micro-retirada después de golpear.
 # La espada del héroe (apuntar.gd) lo daña llamando recibir_golpe().
 
 signal vida_cambiada(vida: int, maxima: int)
@@ -11,16 +12,49 @@ signal murio
 @export var radio_patrulla := 1.8      # m: patrulla de un lado a otro de donde lo pongas
 @export var altura_barra := 1.55       # m: altura de su barrita de vida
 
+@export_group("Astucia")
+@export var micro_retirada := 0.4      # s que se aparta después de golpear
+@export var zigzag_angulo := 20.0      # grados del serpenteo al acercarse
+@export var zigzag_periodo := 0.7      # s de un lado al otro del zigzag
+
 const ANCHO_BARRA := 0.7
 
 var vida := 2
 var _muerto := false
 var _barra: Node3D
 var _relleno: QuadMesh
+var _t_retirada := 0.0
+var _t_retirada_lista := 0.0
+var _fase_zigzag := 0.0
+
+
+func _physics_process(delta: float) -> void:
+	# Micro-retirada: pega y se aparta un instante (lee como inteligente y da respiro).
+	if not _muerto and _t_retirada > 0.0:
+		_t_retirada = maxf(_t_retirada - delta, 0.0)
+		retroceder(delta, 0.7)
+		return
+	super(delta)
+	if _muerto or objetivo == null:
+		return
+	_t_retirada_lista = maxf(_t_retirada_lista - delta, 0.0)
+	if _t_retirada_lista <= 0.0 and aturdido <= 0.0 and _distancia() <= distancia_golpe - 0.1:
+		_t_retirada = micro_retirada
+		_t_retirada_lista = 1.4
+
+
+# Serpentea mientras se acerca: el acercamiento no es una línea recta.
+func _direccion_persecucion(hacia: Vector3, dist: float, delta: float) -> Vector3:
+	var dir := super(hacia, dist, delta)
+	if dist > distancia_preferida:
+		_fase_zigzag += delta * TAU / maxf(zigzag_periodo, 0.1)
+		dir = dir.rotated(Vector3.UP, sin(_fase_zigzag) * deg_to_rad(zigzag_angulo))
+	return dir
 
 
 func _ready() -> void:
 	vida = vida_maxima
+	_fase_zigzag = randf() * TAU
 	add_to_group("esqueletos")
 	if objetivo == null:
 		objetivo = get_tree().current_scene.get_node_or_null("Personaje")

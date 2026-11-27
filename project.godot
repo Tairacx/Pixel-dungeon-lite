@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Pantalla="*res://pantalla.gd"
 Sonidos="*res://sonidos.gd"
+Vegetacion="*res://vegetacion_muros.gd"
 
 [display]
 

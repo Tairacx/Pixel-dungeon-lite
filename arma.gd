@@ -18,6 +18,22 @@ extends Node
 @export var barrido_duracion := 0.18    # s que tarda en cruzar (centrado en el momento del golpe)
 @export var entrada_salida := 0.07      # s para pasar de la pose de reposo al tajo y de vuelta
 
+# Estela del tajo: cinta visual que sigue la hoja y se desvanece detrás
+# (ver estela_espada.gd). Es solo adorno: se puede apagar sin tocar el combate.
+@export_group("Estela del tajo")
+@export var estela_activa := true
+@export var estela_color_nuevo := Color("#FFF4D2")   # filo recién cortado
+@export var estela_color_medio := Color("#F2A33A")   # dorado de la paleta
+@export var estela_color_cola := Color("#A9661B")    # ámbar apagado
+@export var estela_color_remate := Color("#FFD98A")  # el remate del combo
+@export var estela_intensidad := 1.0
+@export_range(0.0, 1.0) var estela_ancho_cola := 0.3
+@export var estela_vida := 0.18                      # s que vive cada muestra
+@export_range(2, 16) var estela_muestras := 14
+@export var estela_destello := true                  # chispa en el punto de impacto
+
+const RUTA_ESTELA := "res://estela_espada.gd"
+
 var espada: Node3D
 var nivel := 0
 var _hoja: MeshInstance3D
@@ -41,6 +57,8 @@ func _ready() -> void:
 	espada.rotation_degrees = rotacion_grados
 	mano.add_child(espada)
 	_mano = mano
+	# La estela se cuelga de la espada ya construida; si algo falla, no pasa nada.
+	_crear_estela()
 	print("Arma: espada colgada de la mano en ", get_parent().name)
 	var ataque = get_parent().get_node_or_null("Espada")   # los enemigos no tienen este nodo
 	if ataque != null and ataque.has_signal("ataque_iniciado"):
@@ -235,3 +253,36 @@ func _enganchar(modelo: Node, hueso: String) -> Node3D:
 		return nodo
 	push_warning("No encontré el hueso '" + hueso + "' en el modelo")
 	return null
+
+
+# Crea la estela del tajo como hija de EspadaVisual. La cinta se arma en coordenadas
+# de mundo (top_level dentro de estela_espada.gd), así no le afecta el barrido de la
+# mano. Se le copian los valores del Inspector de este nodo para poder retocar el
+# look sin tocar código, y si el script no carga el arma sigue funcionando igual.
+func _crear_estela() -> void:
+	if not estela_activa or espada == null:
+		return
+	if espada.has_node("EstelaEspada"):
+		return
+	var guion = load(RUTA_ESTELA)
+	if guion == null:
+		push_warning("Arma: no encontré " + RUTA_ESTELA)
+		return
+	var nodo = guion.new()
+	if not (nodo is MeshInstance3D):
+		push_warning("Estela: " + RUTA_ESTELA + " no es un MeshInstance3D")
+		return
+	nodo.name = "EstelaEspada"
+	nodo.arma = self
+	nodo.largo_hoja = largo_hoja
+	nodo.inicio_hoja = 0.065        # el mismo valor con el que _construir() arma la hoja
+	nodo.muestras = estela_muestras
+	nodo.vida = estela_vida
+	nodo.ancho_cola = estela_ancho_cola
+	nodo.intensidad = estela_intensidad
+	nodo.color_nuevo = estela_color_nuevo
+	nodo.color_medio = estela_color_medio
+	nodo.color_cola = estela_color_cola
+	nodo.color_remate = estela_color_remate
+	nodo.destello_golpe = estela_destello
+	espada.add_child(nodo)
