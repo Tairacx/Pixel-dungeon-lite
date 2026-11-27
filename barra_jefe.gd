@@ -21,12 +21,12 @@ const ANCHO_CALAVERA := 44.0
 const ANCHO_TOTAL := 320.0
 const ALTO_TOTAL := 56.0
 
-var vida := 15.0:
+var vida := 50.0:
 	set(valor):
 		vida = valor
 		queue_redraw()
 
-var maxima := 15:
+var maxima := 50:
 	set(valor):
 		maxima = valor
 		queue_redraw()

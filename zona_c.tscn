@@ -2911,7 +2911,7 @@ mesh = SubResource("BoxMesh_fguuj")
 shape = SubResource("BoxShape3D_panh6")
 
 [node name="JefePerseguidor" type="Node3D" parent="." unique_id=1509863196]
-transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, -5.2)
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0, -5.2)
 
 [node name="Perseguidor" parent="JefePerseguidor" unique_id=1553711215 node_paths=PackedStringArray("objetivo") instance=ExtResource("6_jefe")]
 objetivo = NodePath("../../Personaje")

@@ -7,16 +7,22 @@ extends "res://perseguidor.gd"
 # Después de cada ataque retrocede o circula 1-2 s: no se queda pegado al héroe.
 # Las fases (por % de vida) cambian cadencia, velocidad y patrones disponibles.
 # El aviso de furia es SIN texto: pulso de LuzReyEsqueleto.
+# Segunda oportunidad: al llegar al borde de la muerte se cura una sola vez al 50 %.
 
 signal vida_cambiada(vida: int, maxima: int)
 signal murio
 
-@export var vida_maxima := 15
-var vida := 15
+@export var vida_maxima := 50
+var vida := 50
 
 const Hueso = preload("res://hueso_proyectil.gd")
 
 enum Patron { NINGUNO, LLUVIA, EMBESTIDA, ONDA }
+
+@export_group("Segunda oportunidad")
+@export var curarse_al_borde := true
+@export_range(0.05, 0.5, 0.01) var umbral_curacion := 0.1   # % de vida que activa la cura
+@export_range(0.1, 1.0, 0.05) var fraccion_curacion := 0.5  # % de vida a la que se cura
 
 @export_group("Lluvia de huesos")
 @export var disparos_activos := true
@@ -56,10 +62,12 @@ var _rondas := 0
 var _fase_anterior := 0
 var _energia_luz := -1.0
 var _onda: MeshInstance3D
+var _curacion_usada := false
 
 
 func _ready() -> void:
 	vida = vida_maxima
+	_curacion_usada = false
 	add_to_group("jefe")   # el HUD busca a este grupo para dibujar su barra de vida
 	distancia_golpe = maxf(distancia_golpe, 2.4)   # es grande: su Garra alcanza más lejos
 
@@ -345,11 +353,38 @@ func _danar_heroe(cantidad: float) -> void:
 		salud.recibir_danio(cantidad, global_position)
 
 
+func _umbral_curacion() -> int:
+	return maxi(int(ceil(float(vida_maxima) * umbral_curacion)), 1)
+
+
+func _vida_curacion() -> int:
+	return clampi(int(round(float(vida_maxima) * fraccion_curacion)), 1, vida_maxima)
+
+
+func _feedback_curacion() -> void:
+	var luz := _luz_rey()
+	if luz == null:
+		return
+	luz.global_position = global_position + Vector3.UP * 1.4
+	if _energia_luz < 0.0:
+		_energia_luz = luz.light_energy
+	var t := create_tween()
+	t.tween_property(luz, "light_energy", _energia_luz * 6.0, 0.18)
+	t.tween_property(luz, "light_energy", _energia_luz, 0.5)
+
+
 # La llama apuntar.gd (la espada del héroe) cuando su rayo le da al jefe.
 func recibir_golpe(danio: int) -> void:
 	if vida <= 0:
 		return
 	vida = maxi(vida - danio, 0)
+	# Segunda oportunidad: si el golpe lo deja al borde de la muerte, se cura
+	# una única vez a la mitad de su vida máxima.
+	if curarse_al_borde and not _curacion_usada and vida <= _umbral_curacion():
+		_curacion_usada = true
+		vida = _vida_curacion()
+		_feedback_curacion()
+		print("jefe: segunda oportunidad -> ", vida, " / ", vida_maxima)
 	print("jefe: ", vida, " / ", vida_maxima)
 	vida_cambiada.emit(vida, vida_maxima)
 	aturdir(aturdimiento)
