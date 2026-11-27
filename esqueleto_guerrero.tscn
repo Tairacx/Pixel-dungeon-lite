@@ -14,7 +14,7 @@ radius = 0.7
 
 [node name="EsqueletoGuerrero" type="CharacterBody3D"]
 script = ExtResource("1_script")
-vida_maxima = 4
+vida_maxima = 5
 rapidez = 1.2
 radio_ver = 8.0
 radio_perder = 11.0

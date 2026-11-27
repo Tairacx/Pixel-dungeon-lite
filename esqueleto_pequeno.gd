@@ -8,7 +8,8 @@ extends "res://perseguidor.gd"
 signal vida_cambiada(vida: int, maxima: int)
 signal murio
 
-@export var vida_maxima := 2
+# Vida base 2 + 15 % (redondeada hacia arriba porque la vida es entera): 3.
+@export var vida_maxima := 3
 @export var radio_patrulla := 1.8      # m: patrulla de un lado a otro de donde lo pongas
 @export var altura_barra := 1.55       # m: altura de su barrita de vida
 
@@ -19,7 +20,7 @@ signal murio
 
 const ANCHO_BARRA := 0.7
 
-var vida := 2
+var vida := 3
 var _muerto := false
 var _barra: Node3D
 var _relleno: QuadMesh

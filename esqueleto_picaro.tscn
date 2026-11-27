@@ -14,7 +14,7 @@ radius = 0.6
 
 [node name="EsqueletoPicaro" type="CharacterBody3D"]
 script = ExtResource("1_script")
-vida_maxima = 2
+vida_maxima = 3
 rapidez = 2.4
 radio_ver = 7.0
 radio_perder = 10.0
